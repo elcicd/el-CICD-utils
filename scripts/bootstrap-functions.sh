@@ -193,7 +193,11 @@ __create_meta_info_file() {
 
     echo "EL_CICD_MASTER_NONPROD=${EL_CICD_MASTER_NONPROD}" >> ${_META_INFO_FILE_TMP}
     echo "EL_CICD_MASTER_PROD=${EL_CICD_MASTER_PROD}" >> ${_META_INFO_FILE_TMP}
-    echo "EL_CICD_CLUSTER_UID=$(oc get namespace kube-system -o jsonpath='{.metadata.uid}')" >> ${_META_INFO_FILE_TMP}
+    
+    if [[ $(oc get --raw /readyz >/dev/null) ]]
+    then
+        echo "EL_CICD_CLUSTER_UID=$(oc get namespace kube-system -o jsonpath='{.metadata.uid}')" >> ${_META_INFO_FILE_TMP}
+    fi
 
     sort -o ${_META_INFO_FILE_TMP} ${_META_INFO_FILE_TMP}
 

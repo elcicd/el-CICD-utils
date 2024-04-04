@@ -13,7 +13,7 @@ elCicdDefs:
     script: |-
       folder('$<FOLDER_NAME>') {
           displayName('$<FOLDER_NAME>')
-          description('el-CICD generated pipelines for $<FOLDER_NAME>')
+          description('el-CICD generated pipelines for project $<FOLDER_NAME>')
       }
 
   JENKINS_PIPELINE_DSL_SCRIPT: |-
