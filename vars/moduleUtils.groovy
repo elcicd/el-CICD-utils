@@ -91,6 +91,9 @@ def runBuildStep(def projectInfo, def module, def buildStep, def moduleType) {
             case el.cicd.ASSEMBLER:
                 builderModule.assemble(projectInfo, module)
                 break;
+            case el.cicd.LINTER:
+                builderModule.lint(projectInfo, module)
+                break;
         }
     }
 }

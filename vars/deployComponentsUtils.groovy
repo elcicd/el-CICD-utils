@@ -243,14 +243,16 @@ def getComponentConfigValues(def projectInfo, def component, def imageRegistry, 
 }
 
 def runComponentDeploymentStage(def projectInfo, def component) {
-    sh """
-        helm upgrade --install --atomic --history-max=1 --output yaml \
-            -n ${projectInfo.deployToNamespace} \
-            ${component.name} \
-            . \
-            --post-renderer ./${el.cicd.EL_CICD_POST_RENDER_KUSTOMIZE} \
-            --post-renderer-args '${projectInfo.elCicdProfiles.join(',')}'
-    """
+    dir(component.deploymentDir) {
+        sh """
+            helm upgrade --install --atomic --history-max=1 --output yaml \
+                -n ${projectInfo.deployToNamespace} \
+                ${component.name} \
+                . \
+                --post-renderer ./${el.cicd.EL_CICD_POST_RENDER_KUSTOMIZE} \
+                --post-renderer-args '${projectInfo.elCicdProfiles.join(',')}'
+        """
+    }
 
     waitForAllTerminatingPodsToFinish(projectInfo)
 }
