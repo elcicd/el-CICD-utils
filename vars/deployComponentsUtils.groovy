@@ -31,6 +31,18 @@ def removeComponents(def projectInfo, def modules) {
     sleep 3
 }
 
+def setupDeploymentDir(def projectInfo, def component) {
+    componentScript = gatherComponentScripts(projectInfo, [component])[component.name]
+
+    stage("Configure component deployment") {
+        dir(component.deploymentDir) {
+            sh (script: componentScript)
+
+            moduleUtils.runBuildStep(projectInfo, component, el.cicd.LINTER, 'COMPONENT')
+        }
+    }
+}
+
 def setupDeploymentDirs(def projectInfo, def componentsToDeploy) {
     componentScriptMap = gatherComponentScripts(projectInfo, componentsToDeploy)
 
@@ -230,6 +242,19 @@ def getComponentConfigValues(def projectInfo, def component, def imageRegistry, 
     return configValuesMap
 }
 
+def runComponentDeploymentStage(def projectInfo, def component) {
+    sh """
+        helm upgrade --install --atomic --history-max=1 --output yaml \
+            -n ${projectInfo.deployToNamespace} \
+            ${component.name} \
+            . \
+            --post-renderer ./${el.cicd.EL_CICD_POST_RENDER_KUSTOMIZE} \
+            --post-renderer-args '${projectInfo.elCicdProfiles.join(',')}'
+    """
+
+    waitForAllTerminatingPodsToFinish(projectInfo)
+}
+
 def runComponentDeploymentStages(def projectInfo, def components) {
     concurrentUtils.runParallelStages("Deploy components", components) { component ->
         dir(component.deploymentDir) {
@@ -274,6 +299,17 @@ def getTestComponents(def projectInfo, def componentsToDeploy) {
     }
 
     return projectInfo.testComponents.findAll { componentsToTestSet.contains(it.name) }
+}
+
+def runTestComponents(def projectInfo, def componentsToTest) {
+    if (componentsToTest) {
+        def params = [
+            string(name: 'TEST_ENV', value: projectInfo.deployToEnv),
+            string(name: 'GIT_BRANCH', value: projectInfo.gitBranch)
+        ]
+
+        moduleUtils.runSelectedModulePipelines(projectInfo, componentsToTest, 'Test Modules', params)
+    }
 }
 
 def runTestComponents(def projectInfo, def componentsToTest) {

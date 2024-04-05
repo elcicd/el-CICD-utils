@@ -30,15 +30,21 @@ def call(Map args) {
 
     loggingUtils.echoBanner('SETUP COMPONENT(S) DEPLOYMENT DIRECTORY:', componentsToDeploy.collect { it.name }.join(', '))
 
-    deployComponentsUtils.setupDeploymentDirs(projectInfo, componentsToDeploy)
-            
-    if (!componentsToDeploy) {
-        echo '--> NO COMPONENTS TO DEPLOY: SKIPPING'
+    if (args.isBuild) {
+        deployComponentsUtils.setupDeploymentDir(projectInfo, componentsToDeploy[0])
+    }
+    else {
+        deployComponentsUtils.setupDeploymentDirs(projectInfo, componentsToDeploy)
     }
 
     loggingUtils.echoBanner('DEPLOY COMPONENT(S):', componentsToDeploy.collect { it.name }.join(', '))
 
-    deployComponentsUtils.runComponentDeploymentStages(projectInfo, componentsToDeploy)
+    if (args.isBuild) {
+        deployComponentsUtils.runComponentDeploymentStage(projectInfo, componentsToDeploy[0])
+    }
+    else {
+        deployComponentsUtils.runComponentDeploymentStages(projectInfo, componentsToDeploy)
+    }
     
     if (!componentsToDeploy) {
         echo '--> NO COMPONENTS TO DEPLOY: SKIPPING'

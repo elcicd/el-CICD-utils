@@ -28,6 +28,10 @@ void call(Map args) {
             moduleUtils.buildScanAndPushImage(projectInfo, module)
         }
         
-        deployComponents(projectInfo: projectInfo,  componentsToDeploy: [module], imageTag: module.imageTag, recreate: args.recreate)
+        deployComponents(projectInfo: projectInfo,
+                         componentsToDeploy: [module],
+                         imageTag: module.imageTag,
+                         recreate: args.recreate,
+                         isBuild: true)
     }
 }
