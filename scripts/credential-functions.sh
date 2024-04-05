@@ -1,4 +1,4 @@
-#!/usr/bin/bash
+#!/usr/bin/env bash
 # SPDX-License-Identifier: LGPL-2.1-or-later
 
 export GITHUB_REST_API_HDR='Accept: application/vnd.github.v3+json'

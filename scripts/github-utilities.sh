@@ -1,4 +1,4 @@
-#!/usr/bin/bash
+#!/usr/bin/env bash
 # SPDX-License-Identifier: LGPL-2.1-or-later
 
 GITHUB_REST_API_ACCEPT_HEADER="Accept: application/vnd.github+json"
