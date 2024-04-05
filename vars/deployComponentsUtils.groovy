@@ -301,26 +301,22 @@ def getTestComponents(def projectInfo, def componentsToDeploy) {
     return projectInfo.testComponents.findAll { componentsToTestSet.contains(it.name) }
 }
 
-def runTestComponents(def projectInfo, def componentsToTest) {
-    if (componentsToTest) {
-        def params = [
-            string(name: 'TEST_ENV', value: projectInfo.deployToEnv),
-            string(name: 'GIT_BRANCH', value: projectInfo.gitBranch)
-        ]
+def runTestComponent(def projectInfo, def componentsToTest) {
+    def params = [
+        string(name: 'TEST_ENV', value: projectInfo.deployToEnv),
+        string(name: 'GIT_BRANCH', value: projectInfo.gitBranch)
+    ]
 
-        moduleUtils.runSelectedModulePipelines(projectInfo, componentsToTest, 'Test Modules', params)
-    }
+    moduleUtils.runSelectedModulePipeline(projectInfo, componentToTest, 'Test Modules', params)
 }
 
 def runTestComponents(def projectInfo, def componentsToTest) {
-    if (componentsToTest) {
-        def params = [
-            string(name: 'TEST_ENV', value: projectInfo.deployToEnv),
-            string(name: 'GIT_BRANCH', value: projectInfo.gitBranch)
-        ]
+    def params = [
+        string(name: 'TEST_ENV', value: projectInfo.deployToEnv),
+        string(name: 'GIT_BRANCH', value: projectInfo.gitBranch)
+    ]
 
-        moduleUtils.runSelectedModulePipelines(projectInfo, componentsToTest, 'Test Modules', params)
-    }
+    moduleUtils.runSelectedModulePipelines(projectInfo, componentsToTest, 'Test Modules', params)
 }
 
 def outputDeploymentSummary(def projectInfo) {
