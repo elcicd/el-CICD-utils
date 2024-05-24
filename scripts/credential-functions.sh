@@ -129,7 +129,7 @@ _install_sealed_secrets() {
     local _KUBESEAL_URL="https://github.com/bitnami-labs/sealed-secrets/releases/download"
     _KUBESEAL_URL="${_KUBESEAL_URL}/v${SEALED_SECRETS_RELEASE_VERSION:?}/kubeseal-${SEALED_SECRETS_RELEASE_VERSION:?}-linux-amd64.tar.gz"
     sudo rm -f ${_SEALED_SECRETS_DIR}/kubeseal* /usr/local/bin/kubeseal
-    wget -qc --show-progress ${_KUBESEAL_URL} -O ${_SEALED_SECRETS_DIR}/kubeseal.tar.gz
+    wget -qc --force-progress ${_KUBESEAL_URL} -O ${_SEALED_SECRETS_DIR}/kubeseal.tar.gz
     tar -xvzf ${_SEALED_SECRETS_DIR}/kubeseal.tar.gz -C ${_SEALED_SECRETS_DIR}
     sudo install -m 755 ${_SEALED_SECRETS_DIR}/kubeseal /usr/local/bin/kubeseal
 
