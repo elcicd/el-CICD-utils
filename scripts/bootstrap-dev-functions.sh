@@ -307,20 +307,7 @@ __setup_image_registries() {
         -n ${DEMO_OCI_REGISTRY} \
         ${DEMO_OCI_REGISTRY} \
         ${EL_CICD_HELM_OCI_REGISTRY}/elcicd-chart
-
-    # helm template \
-    #     --set-string elCicdProfiles="{${_PROFILES}}" \
-    #     --set-string elCicdDefs.OBJ_NAMES="{${_OBJ_NAMES}}" \
-    #     --set-string elCicdDefs.HOST_IP=${DEMO_OCI_REGISTRY_HOST_IP} \
-    #     --set-string elCicdDefs.DEMO_OCI_REGISTRY=${DEMO_OCI_REGISTRY} \
-    #     ${_HTPASSWDS} \
-    #     --set-string elCicdDefaults.ingressHostDomain=${CLUSTER_WILDCARD_DOMAIN} \
-    #     -f ${EL_CICD_DIR}/${DEMO_CHART_DEPLOY_DIR}/demo-image-registry-values.yaml \
-    #     -n ${DEMO_OCI_REGISTRY} \
-    #     ${DEMO_OCI_REGISTRY} \
-    #     ${EL_CICD_HELM_OCI_REGISTRY}/elcicd-chart
     set +x
-    exit 0
 
     __register_insecure_registries
 
