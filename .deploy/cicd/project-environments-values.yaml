@@ -15,13 +15,13 @@ elCicdTemplates:
     namespace: $<HELM_RELEASE_NAMESPACE>
   - kind: Group
     name: $<$<NAME_SPACE>_GROUP>
-    
+
 - templateName: serviceAccount
   objName: $<PROJECT_ID>-$<TEST_RUNNER_SUFFIX>
   namespaces: $<NON_PROD_CICD_NAMESPACES>
   mustHaveEveryProfile:
   - nonprod
-  
+
 - templateName: roleBinding
   objName: $<PROJECT_ID>-$<TEST_RUNNER_SUFFIX>
   namespaces: $<NON_PROD_CICD_NAMESPACES>

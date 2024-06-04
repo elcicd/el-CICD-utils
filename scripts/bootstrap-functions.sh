@@ -9,6 +9,8 @@ _bootstrap_el_cicd() {
         echo "Exiting."
         exit 1
     fi
+    
+    _cluster_info
 
     __gather_bootstrap_info
 
@@ -110,8 +112,6 @@ __summarize_and_confirm_bootstrap_run_with_user() {
     esac
 
     echo "${EL_CICD_MASTER_NAMESPACE} namespace and el-CICD Master: ${_BOLD}${_EL_CICD_MASTER_NAMESPACE_RESULT}${_REGULAR}"
-    
-    _cluster_info
 
     echo
     echo "=================== ${_BOLD}END SUMMARY${_REGULAR} ==================="
@@ -124,7 +124,13 @@ __summarize_and_confirm_bootstrap_run_with_user() {
 
 _cluster_info() {
     echo
-    oc cluster-info | head -n 1
+    oc status
+    if [[ $? != 0 ]]
+    then
+        echo
+        echo 'ERROR: Unable to reach cluster, or not logged in; EXITING...'
+        exit 1
+    fi
     echo "Cluster wildcard Domain: ${_BOLD}*.${CLUSTER_WILDCARD_DOMAIN}${_REGULAR}"
 
     echo

@@ -339,22 +339,24 @@ def getElCicdChartProjectEnvironmentsValues(def projectInfo) {
 }
 
 def getElCicdNamespaceChartValues(def projectInfo, def configValues) {
-    configValues.elCicdNamespaces = []
-
+    def nsElCicdTemplate = [templateName: 'namespace', objNames: []]
     if (el.cicd.EL_CICD_MASTER_NONPROD) {
-        configValues.elCicdNamespaces.addAll(projectInfo.nonProdNamespaces.values())
+        nsElCicdTemplate.objNames.addAll(projectInfo.nonProdNamespaces.values())
         if (projectInfo.sandboxNamespaces) {
-            configValues.elCicdNamespaces.addAll(projectInfo.sandboxNamespaces.values())
+            nsElCicdTemplate.objNames.addAll(projectInfo.sandboxNamespaces.values())
         }
     }
 
     if (el.cicd.EL_CICD_MASTER_PROD) {
-        configValues.elCicdNamespaces.addAll(projectInfo.prodNamespaces.values())
+        nsElCicdTemplate.objNames.addAll(projectInfo.prodNamespaces.values())
     }
+    
+    nsElCicdTemplate.labels = [cicd: 'true', 'projectid': projectInfo.id]
+    configValues["elCicdTemplates-namespaces-cicd"] = [nsElCicdTemplate]
 }
 
 def getElCicdNonProdEnvsResourceQuotasValues(def projectInfo, def elCicdDefs, def rqProfiles) {
-    cicdEnvs = []
+    def cicdEnvs = []
     cicdEnvs += projectInfo.nonProdEnvs
     cicdEnvs += projectInfo.sandboxEnvs
 
