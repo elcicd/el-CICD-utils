@@ -359,7 +359,6 @@ def getElCicdNamespaceChartValues(def projectInfo, def configValues) {
         nsElCicdTemplate.annotations = ['elcicd.io/cicd-type': 'prod']
     }
     
-    nsElCicdTemplate.labels = ['elcicd.io/cicd': 'true']
     configValues["elCicdTemplates-namespaces-cicd"] = [nsElCicdTemplate]
 }
 
