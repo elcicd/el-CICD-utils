@@ -18,16 +18,14 @@ elCicdTemplates:
     valueFrom:
       fieldRef:
         fieldPath: metadata.namespace
-  projectedVolumeLabels:
+  projectedVolumes:
   - name: mounted-$<JENKINS>-$<JOBS_DIR>
     mountPath: $<MOUNT_DIR>
-    labels:
-    - $<JENKINS>-folder
-    - $<JENKINS>-pipeline
+    configMapLabels:
+      $<JENKINS>-pipeline: {}
   serviceAccountName: $<JENKINS>
-  command: ["/bin/bash"]
+  command: ["/bin/bash", "-c"]
   args:
-  - -c
   - echo "WORKING DIR -> $(pwd)";
     echo "USER -> $(id)";
     set -x;
