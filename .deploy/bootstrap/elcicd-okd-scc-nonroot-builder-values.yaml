@@ -4,10 +4,8 @@
 ##
 ############################################
 
-elCicdTemplates: []
-
-elCicdRawYaml-scc:
-  nonroot-builder-scc: |-
+elCicdTemplates-scc: 
+- template:
     apiVersion: security.openshift.io/v1
     kind: SecurityContextConstraints
     metadata:
@@ -42,7 +40,6 @@ elCicdRawYaml-scc:
     - projected
     - secret
 
-elCicdTemplates-okd:
 - templateName: clusterRole
   objName: system:openshift:scc:nonroot-builder
   rules:
