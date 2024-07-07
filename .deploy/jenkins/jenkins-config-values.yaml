@@ -112,25 +112,18 @@ elCicdTemplates:
     requests:
       memory: $<JENKINS_MEMORY_LIMIT>
       cpu: $<JENKINS_CPU_REQUEST>
-  volumeMounts:
+  projectedVolumes:
   - name: $<JENKINS_PLUGINS>
     mountPath: $<JENKINS_PLUGINS_PATH>
+    configMaps:
+      $<JENKINS_PLUGINS>: {}
   - name: $<JENKINS_CASC>
     mountPath: $<JENKINS_CASC_PATH>
+    configMaps:
+      $<JENKINS_CASC>: {}
+  volumeMounts:
   - $<JENKINS_PERSISTENT_VOLUME_MNT>
   volumes:
-  - name: $<JENKINS_PLUGINS>
-    configMap:
-      name: $<JENKINS_PLUGINS>
-      items:
-      - key: $<JENKINS_PLUGINS_TXT>
-        path: $<JENKINS_PLUGINS_TXT>
-  - name: $<JENKINS_CASC>
-    configMap:
-      name: $<JENKINS_CASC>
-      items:
-      - key: $<JENKINS_CASC_YAML>
-        path: $<JENKINS_CASC_YAML>
   - $<JENKINS_PERSISTENT_VOLUME>
 
 - templateName: service
