@@ -108,9 +108,6 @@ def node(Map args, Closure body) {
               ${elCicdMetaInfoConfigMapRef}
             securityContext:
               fsGroup: ${fsGroup}
-              seccompProfile:
-                type: Localhost
-                localhostProfile: "profiles/unshare.json"
         """,
         volumes: volumeDefs
     ]) {

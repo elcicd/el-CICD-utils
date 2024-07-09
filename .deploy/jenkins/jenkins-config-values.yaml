@@ -5,6 +5,7 @@ elCicdDefs:
   KUBERNETES_MASTER: https://kubernetes.default:443
   ENABLE_FATAL_ERROR_LOG_FILE: "false"
   JENKINS_INSTALL_DIR: /var/lib/jenkins
+  JENKINS_CONFIG_FILE_PATH: /mnt/jenkins-config
 
   JENKINS_CASC: jenkins-casc
   JENKINS_CASC_YAML: jenkins-casc.yaml
@@ -30,9 +31,8 @@ elCicdTemplates:
   labels:
     name: $<JENKINS_SERVICE_NAME>
   image: $<JENKINS_IMAGE>
-  command: ["/bin/bash"]
+  command: ["/bin/bash", "-c"]
   args:
-  - -c
   - if [[ -f $JENKINS_CICD_PLUGINS_FILE ]];
     then
         java -jar /usr/share/java/jenkins-plugin-manager.jar
@@ -50,7 +50,6 @@ elCicdTemplates:
          -Dhudson.security.csrf.GlobalCrumbIssuerConfiguration.DISABLE_CSRF_PROTECTION=true
          $JENKINS_JAVA_OVERRIDES
          -jar /usr/share/java/jenkins.war >> /var/log/jenkins-startup.log;
-  strategyType: RollingUpdate
   imagePullSecret: elcicd-jenkins-registry-credentials
   serviceAccountName: $<JENKINS_SERVICE_NAME>
   env:
@@ -125,6 +124,13 @@ elCicdTemplates:
   - $<JENKINS_PERSISTENT_VOLUME_MNT>
   volumes:
   - $<JENKINS_PERSISTENT_VOLUME>
+
+- templateName: persistentVolumeClaim
+  mustHaveAnyProfile:
+  - jenkinsPersistent
+  objName: $<JENKINS_SERVICE_NAME>
+  storageRequest: $<VOLUME_CAPACITY>
+  accessMode: ReadWriteMany
 
 - templateName: service
   objName: $<JENKINS_SERVICE_NAME>
@@ -237,13 +243,6 @@ elCicdTemplates:
   - kind: ServiceAccount
     name: $<JENKINS_SERVICE_NAME>
     namespace: $<HELM_RELEASE_NAMESPACE>
-
-- templateName: persistentVolumeClaim
-  mustHaveAnyProfile:
-  - jenkinsPersistent
-  objName: $<JENKINS_SERVICE_NAME>
-  storageRequest: $<VOLUME_CAPACITY>
-  accessMode: ReadWriteMany
 
 - templateName: configMap
   mustHaveAnyProfile:
