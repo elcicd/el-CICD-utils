@@ -108,7 +108,8 @@ def node(Map args, Closure body) {
             securityContext:
               runAsNonRoot: true
               fsGroup: ${fsGroup}
-        """
+        """,
+        volumes: []
     ]) {
         node(jenkinsAgent) {
             try {
