@@ -120,7 +120,7 @@ def buildScanAndPushImage(def projectInfo, def module) {
 
                 podman login ${tlsVerify} --username \${DEV_OCI_REGISTRY_USERNAME} --password \${DEV_OCI_REGISTRY_PWD} ${imageRepo}
 
-                podman build --build-arg=EL_CICD_BUILD_SECRETS_NAME=./${el.cicd.EL_CICD_BUILD_SECRETS_NAME} --squash --isolation chroot\
+                podman build --build-arg=EL_CICD_BUILD_SECRETS_NAME=./${el.cicd.EL_CICD_BUILD_SECRETS_NAME} --squash \
                             -t ${imageRepo}/${module.id}:${module.imageTag} -f ./Dockerfile
             """
 
