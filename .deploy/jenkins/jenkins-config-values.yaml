@@ -9,12 +9,12 @@ elCicdDefs:
 
   JENKINS_CASC: jenkins-casc
   JENKINS_CASC_YAML: jenkins-casc.yaml
-  JENKINS_CASC_PATH: $<JENKINS_INSTALL_DIR>/$<JENKINS_CASC>
+  JENKINS_CASC_PATH: $<JENKINS_CONFIG_FILE_PATH>/$<JENKINS_CASC>
   CASC_RELOAD_TOKEN: elcicd
 
   JENKINS_PLUGINS: jenkins-plugins
   JENKINS_PLUGINS_TXT: jenkins-plugins.txt
-  JENKINS_PLUGINS_PATH: $<JENKINS_INSTALL_DIR>/$<JENKINS_PLUGINS>
+  JENKINS_PLUGINS_PATH: $<JENKINS_CONFIG_FILE_PATH>/$<JENKINS_PLUGINS>
 
 elCicdDefs-jenkinsPersistent:
   JENKINS_PERSISTENT_VOLUME_MNT:
@@ -33,25 +33,28 @@ elCicdTemplates:
   image: $<JENKINS_IMAGE>
   command: ["/bin/bash", "-c"]
   args:
-  - if [[ -f $JENKINS_CICD_PLUGINS_FILE ]];
+  - if [[ -f ${JENKINS_CICD_PLUGINS_FILE} ]];
     then
         java -jar /usr/share/java/jenkins-plugin-manager.jar
             --verbose
             --war /usr/share/java/jenkins.war
-            -f $JENKINS_CICD_PLUGINS_FILE
-            --plugin-download-directory $JENKINS_HOME/plugins | tee -a /var/log/jenkins-startup.log;
+            -f ${JENKINS_CICD_PLUGINS_FILE}
+            --plugin-download-directory ${JENKINS_HOME}/plugins | tee -a /var/log/jenkins-startup.log;
     else
-        echo "Jenkins plugins file not found $JENKINS_CICD_PLUGINS_FILE";
+        echo "Jenkins plugins file not found ${JENKINS_CICD_PLUGINS_FILE}";
     fi;
 
-    cp $<JENKINS_CASC_PATH>/$<JENKINS_CASC_YAML> $<JENKINS_CONFIG_FILE_PATH>;
-    chmod 777 $<JENKINS_CONFIG_FILE_PATH>/$<JENKINS_CASC_YAML>;
+    cp $<JENKINS_CASC_PATH>/$<JENKINS_CASC_YAML> $<JENKINS_INSTALL_DIR>;
+    chmod 777 $<JENKINS_INSTALL_DIR>/$<JENKINS_CASC_YAML>;
     java -Djenkins.install.runSetupWizard=false
          -Dhudson.security.csrf.GlobalCrumbIssuerConfiguration.DISABLE_CSRF_PROTECTION=true
          $JENKINS_JAVA_OVERRIDES
          -jar /usr/share/java/jenkins.war >> /var/log/jenkins-startup.log;
   imagePullSecret: elcicd-jenkins-registry-credentials
   serviceAccountName: $<JENKINS_SERVICE_NAME>
+  securityContext:
+    runAsNonRoot: true
+    fsGroup: 0
   env:
   - name: JENKINS_JAVA_OVERRIDES
     value: -D-XX:+UseParallelGC

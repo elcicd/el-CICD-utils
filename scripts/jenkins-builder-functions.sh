@@ -105,5 +105,11 @@ _base_jenkins_agent_exists() {
 get_jenkins_image_sha() {
     local _IMAGE_URL=docker://${JENKINS_OCI_REGISTRY}/${JENKINS_IMAGE_NAME}
     JENKINS_MASTER_IMAGE_SHA=$(skopeo inspect --format '{{.Digest}}' --tls-verify=${JENKINS_OCI_REGISTRY_ENABLE_TLS} ${_IMAGE_URL} 2> /dev/null)
+    if  ! command -v skopeo &> /dev/null
+    then
+        echo
+        echo "ERROR: ${_BOLD}skopeo MUST BE INSTALLED${_REGULAR} to run el-CICD; Exiting..."
+        exit 1
+    fi
 }
 

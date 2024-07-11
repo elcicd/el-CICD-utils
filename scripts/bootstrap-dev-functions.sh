@@ -271,12 +271,7 @@ __create_image_registry_nfs_share() {
 }
 
 __setup_image_registries() {
-    if [[ ${SETUP_REGISTRY_NFS} == ${_YES} ]]
-    then
-        __create_image_registry_nfs_share
-
-        DEMO_OCI_REGISTRY_PROFILES=${DEMO_OCI_REGISTRY_PROFILES},nfs
-    fi
+    set -e
 
     local _REGISTRY_NAMES=$(echo ${DEMO_OCI_REGISTRY_NAMES} | tr ':' ' ')
     for REGISTRY_NAME in ${_REGISTRY_NAMES}
@@ -286,15 +281,15 @@ __setup_image_registries() {
         local _HTPASSWD=$(htpasswd -Bbn elcicd${REGISTRY_NAME} ${DEMO_OCI_REGISTRY_USER_PWD})
         local _HTPASSWDS="${_HTPASSWDS:+${_HTPASSWDS} } --set-string elCicdDefs-htpasswd.${_OBJ_NAME}_HTPASSWD=${_HTPASSWD}"
     done
-
-    DEMO_OCI_REGISTRY_HOST_IP=$(ip route get 1 | awk '{print $(NF-2);exit}')
-
     local _PROFILES='htpasswd'
     if [[ ${SETUP_REGISTRY_NFS} == ${_YES} ]]
     then
+        __create_image_registry_nfs_share
         _PROFILES+=",nfs"
     fi
 
+    DEMO_OCI_REGISTRY_HOST_IP=$(ip route get 1 | awk '{print $(NF-2);exit}')
+    echo
     set -x
     helm upgrade --install --atomic --create-namespace --history-max=1 \
         --set-string elCicdProfiles="{${_PROFILES}}" \
@@ -314,6 +309,7 @@ __setup_image_registries() {
     echo
     echo 'Docker Registry is up!'
     sleep 2
+    set +e
 }
 
 __register_insecure_registries() {

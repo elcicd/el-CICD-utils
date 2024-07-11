@@ -108,17 +108,6 @@ _confirm_upgrade_install_sealed_secrets() {
 
 _install_sealed_secrets() {
     set -e
-
-    echo
-    echo '================= SEALED SECRETS ================='
-    echo
-    echo "Installing Sealed Secrets ${_BOLD}${SEALED_SECRETS_RELEASE_INFO}${_REGULAR}"
-    echo
-    helm upgrade --install --atomic --history-max=2 \
-                 --repo https://bitnami-labs.github.io/sealed-secrets \
-                 --version ${SEALED_SECRETS_CHART_VERSION} \
-                 -n kube-system \
-                 sealed-secrets sealed-secrets
     echo
     echo '================= SEALED SECRETS ================='
 
@@ -129,9 +118,20 @@ _install_sealed_secrets() {
     local _KUBESEAL_URL="https://github.com/bitnami-labs/sealed-secrets/releases/download"
     _KUBESEAL_URL="${_KUBESEAL_URL}/v${SEALED_SECRETS_RELEASE_VERSION:?}/kubeseal-${SEALED_SECRETS_RELEASE_VERSION:?}-linux-amd64.tar.gz"
     sudo rm -f ${_SEALED_SECRETS_DIR}/kubeseal* /usr/local/bin/kubeseal
-    wget -qc --force-progress ${_KUBESEAL_URL} -O ${_SEALED_SECRETS_DIR}/kubeseal.tar.gz
+    wget -qc --show-progress ${_KUBESEAL_URL} -O ${_SEALED_SECRETS_DIR}/kubeseal.tar.gz
     tar -xvzf ${_SEALED_SECRETS_DIR}/kubeseal.tar.gz -C ${_SEALED_SECRETS_DIR}
     sudo install -m 755 ${_SEALED_SECRETS_DIR}/kubeseal /usr/local/bin/kubeseal
+    
+    echo
+    echo "Installing Sealed Secrets ${_BOLD}${SEALED_SECRETS_RELEASE_INFO}${_REGULAR}"
+    echo
+    helm upgrade --install --atomic --history-max=2 \
+                 --repo https://bitnami-labs.github.io/sealed-secrets \
+                 --version ${SEALED_SECRETS_CHART_VERSION} \
+                 -n kube-system \
+                 sealed-secrets sealed-secrets
+    echo
+    echo '================= SEALED SECRETS ================='
 
     set +e
 }
