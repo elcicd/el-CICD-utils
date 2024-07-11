@@ -15,7 +15,7 @@ def setupTeamCicdServer(def teamInfo) {
         ${shCmd.echo ''}
         cat ${jenkinsConfigFile}
 
-        ${shCmd.echo ''}
+        ${shCmd.echo ''} 
         helm template \
             -f ${jenkinsConfigFile} \
             --set-file elCicdDefs.JENKINS_CASC_FILE=${el.cicd.CONFIG_JENKINS_DIR}/${el.cicd.JENKINS_CICD_CASC_FILE} \
