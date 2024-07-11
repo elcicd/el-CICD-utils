@@ -95,7 +95,6 @@ def node(Map args, Closure body) {
             imagePullSecrets:
             - 'elcicd-jenkins-registry-credentials'
             serviceAccount: "${serviceAccountName}"
-            alwaysPullImage: true
             resources:
               requests:
                 memory: ${el.cicd.JENKINS_AGENT_MEMORY_REQUEST}
