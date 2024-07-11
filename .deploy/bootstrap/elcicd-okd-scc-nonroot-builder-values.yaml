@@ -19,7 +19,7 @@ elCicdTemplates-scc:
     allowHostNetwork: false
     allowHostPID: false
     allowHostPorts: false
-    allowPrivilegeEscalation: false
+    allowPrivilegeEscalation: true
     allowPrivilegedContainer: false
     fsGroup:
       type: RunAsAny
