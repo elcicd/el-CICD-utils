@@ -16,6 +16,19 @@ def setupTeamCicdServer(def teamInfo) {
         cat ${jenkinsConfigFile}
 
         ${shCmd.echo ''}
+        helm template \
+            -f ${jenkinsConfigFile} \
+            --set-file elCicdDefs.JENKINS_CASC_FILE=${el.cicd.CONFIG_JENKINS_DIR}/${el.cicd.JENKINS_CICD_CASC_FILE} \
+            --set-file elCicdDefs.JENKINS_PLUGINS_FILE=${el.cicd.CONFIG_JENKINS_DIR}/${el.cicd.JENKINS_CICD_PLUGINS_FILE} \
+            -f ${el.cicd.EL_CICD_DIR}/${el.cicd.CICD_CHART_DEPLOY_DIR}/prod-pipeline-setup-values.yaml \
+            -f ${el.cicd.EL_CICD_DIR}/${el.cicd.JENKINS_CHART_DEPLOY_DIR}/elcicd-jenkins-pipeline-template-values.yaml \
+            -f ${el.cicd.EL_CICD_DIR}/${el.cicd.JENKINS_CHART_DEPLOY_DIR}/jenkins-config-values.yaml \
+            -f ${el.cicd.CONFIG_CHART_DEPLOY_DIR}/default-team-server-values.yaml \
+            -n ${teamInfo.cicdMasterNamespace} \
+            jenkins \
+            ${el.cicd.EL_CICD_HELM_OCI_REGISTRY}/elcicd-chart
+
+        ${shCmd.echo ''}
         helm upgrade --install --atomic --create-namespace --history-max=1 --timeout 10m0s \
             -f ${jenkinsConfigFile} \
             --set-file elCicdDefs.JENKINS_CASC_FILE=${el.cicd.CONFIG_JENKINS_DIR}/${el.cicd.JENKINS_CICD_CASC_FILE} \
