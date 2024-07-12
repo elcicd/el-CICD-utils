@@ -22,15 +22,14 @@ elCicdTemplates-scc:
     allowPrivilegeEscalation: true
     allowPrivilegedContainer: false
     fsGroup:
-      type: RunAsAny
+      type: MustRunAs
     priority: 5
     readOnlyRootFilesystem: false
     requiredDropCapabilities:
     - KILL
     - MKNOD
     runAsUser:
-      type: MustRunAs
-      uid: 1001
+      type: MustRunAsNonRoot
     seLinuxContext:
       type: MustRunAs
     seccompProfiles:

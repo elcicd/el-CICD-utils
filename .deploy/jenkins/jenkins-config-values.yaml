@@ -52,9 +52,6 @@ elCicdTemplates:
          -jar /usr/share/java/jenkins.war >> /var/log/jenkins-startup.log;
   imagePullSecret: elcicd-jenkins-registry-credentials
   serviceAccountName: $<JENKINS_SERVICE_NAME>
-  securityContext:
-    runAsNonRoot: true
-    fsGroup: 0
   env:
   - name: JENKINS_JAVA_OVERRIDES
     value: -D-XX:+UseParallelGC
