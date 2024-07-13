@@ -14,26 +14,22 @@ elCicdTemplates-scc:
           SCC but allows users to run with any non-root UID and multiple namespaces for
           nonroot building of images with podman and buildah.  Created to support el-CICD.
       name: nonroot-builder
-    allowHostDirVolumePlugin: false
-    allowHostIPC: false
-    allowHostNetwork: false
-    allowHostPID: false
+    allowHostDirVolumePlugin: true
     allowHostPorts: false
     allowPrivilegeEscalation: true
     allowPrivilegedContainer: false
     fsGroup:
-      type: MustRunAs
+      type: RunAsAny
     priority: 5
     readOnlyRootFilesystem: false
     requiredDropCapabilities:
     - KILL
     - MKNOD
     runAsUser:
-      type: MustRunAsNonRoot
+      type: MustRunAs
+      uid: 1001
     seLinuxContext:
       type: MustRunAs
-    seccompProfiles:
-    - runtime/default
     supplementalGroups:
       type: RunAsAny
     volumes:
