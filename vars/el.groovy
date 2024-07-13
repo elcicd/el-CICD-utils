@@ -83,6 +83,7 @@ def node(Map args, Closure body) {
         elCicdMetaInfoConfigMapRef = ''
     }
 
+
     podTemplate([
         label: "${jenkinsAgent}",
         cloud: 'openshift',
@@ -95,6 +96,7 @@ def node(Map args, Closure body) {
             imagePullSecrets:
             - 'elcicd-jenkins-registry-credentials'
             serviceAccount: "${serviceAccountName}"
+            alwaysPullImage: true
             resources:
               requests:
                 memory: ${el.cicd.JENKINS_AGENT_MEMORY_REQUEST}
@@ -105,6 +107,8 @@ def node(Map args, Closure body) {
             - name: 'jnlp'
               image: "${el.cicd.JENKINS_OCI_REGISTRY}/${el.cicd.JENKINS_AGENT_IMAGE_PREFIX}-${jenkinsAgent}:latest"
               ${elCicdMetaInfoConfigMapRef}
+            securityContext:
+              fsGroup: ${fsGroup}
         """,
         volumes: []
     ]) {
