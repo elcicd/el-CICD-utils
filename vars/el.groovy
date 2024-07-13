@@ -74,12 +74,10 @@ def node(Map args, Closure body) {
     
     def agentNamespace = null
     def serviceAccountName = el.cicd.JENKINS_SERVICE_ACCOUNT
-    def fsGroup = "1001"
     def elCicdMetaInfoConfigMapRef = /envFrom: [{"configMapRef": { "name": "${el.cicd.EL_CICD_META_INFO_NAME}" }, "prefix": "elcicd_"}]/
     if (args.isTest) {
         agentNamespace = "${args.projectId}-${args.testEnv}"
         serviceAccountName = "${args.projectId}-${el.cicd.TEST_SERVICE_ACCOUNT_SUFFIX}"
-        fsGroup = ''
         elCicdMetaInfoConfigMapRef = ''
     }
 
@@ -107,8 +105,6 @@ def node(Map args, Closure body) {
             - name: 'jnlp'
               image: "${el.cicd.JENKINS_OCI_REGISTRY}/${el.cicd.JENKINS_AGENT_IMAGE_PREFIX}-${jenkinsAgent}:latest"
               ${elCicdMetaInfoConfigMapRef}
-            securityContext:
-              fsGroup: ${fsGroup}
         """,
         volumes: []
     ]) {
