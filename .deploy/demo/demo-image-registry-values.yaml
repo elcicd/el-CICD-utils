@@ -34,7 +34,10 @@ elCicdDefs-nfs:
       claimName: $<DEMO_OCI_REGISTRY>-nfs-pvc
 
 elCicdTemplates:
-- templateName: deployment|service|ingress
+- templateNames: 
+  - deployment
+  - service
+  - ingress
   objNames: $<OBJ_NAMES>
   image: registry
   port: $<PORT>
