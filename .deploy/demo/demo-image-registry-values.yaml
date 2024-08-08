@@ -3,7 +3,7 @@ elCicdDefs:
   REGISTRY_HTTP_ADDR: "0.0.0.0"
   MEMORY: 256Mi
 
-elCicdDefs-htpasswd:
+elCicdDefs-HTPASSWD:
   ENV:
   - name: REGISTRY_AUTH
     value: htpasswd
@@ -61,7 +61,7 @@ elCicdTemplates:
 - templateName: secret
   objNames: $<OBJ_NAMES>
   mustHaveAnyProfile:
-  - htpasswd
+  - HTPASSWD
   stringData:
     htpasswd: $<$<OBJ_NAME>_HTPASSWD>
     

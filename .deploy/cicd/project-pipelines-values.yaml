@@ -1,4 +1,4 @@
-elCicdDefs-nonprod:
+elCicdDefs-NONPROD:
   MODULE_PIPELINE_LABELS:
     teamId: $<TEAM_ID>
     projectid: $<PROJECT_ID>
@@ -26,8 +26,8 @@ elCicdTemplates:
   objNames: $<BUILD_ARTIFACT_PIPELINES>
   objName: $<PROJECT_ID>-$<>-build-artifact
   mustHaveEveryProfile:
-  - nonprod
-  - hasArtifacts
+  - NONPROD
+  - HAS_ARTIFACTS
   labels: $<MODULE_PIPELINE_LABELS>
   elCicdDefs:
     PIPELINE_DISPLAY_NAME: "BUILD ARTIFACT: $<BASE_OBJ_NAME>"
@@ -45,8 +45,8 @@ elCicdTemplates:
   objNames: $<BUILD_COMPONENT_PIPELINES>
   objName: $<PROJECT_ID>-$<>-build-component
   mustHaveEveryProfile:
-  - nonprod
-  - hasComponents
+  - NONPROD
+  - HAS_COMPONENTS
   labels: $<MODULE_PIPELINE_LABELS>
   elCicdDefs:
     PIPELINE_DISPLAY_NAME: "BUILD COMPONENT: $<BASE_OBJ_NAME>"
@@ -68,8 +68,8 @@ elCicdTemplates:
   objNames: $<TEST_COMPONENT_PIPELINES>
   objName: $<PROJECT_ID>-$<>-run-test-component
   mustHaveEveryProfile:
-  - nonprod
-  - hasTestComponents
+  - NONPROD
+  - HAS_TEST_COMPONENTS
   labels: $<MODULE_PIPELINE_LABELS>
   elCicdDefs:
     PIPELINE_DISPLAY_NAME: "RUN TESTS: $<BASE_OBJ_NAME>"
@@ -95,7 +95,7 @@ elCicdTemplates:
   - redeploy-release-candidate
   objName: $<PROJECT_ID>-$<>
   mustHaveEveryProfile:
-  - nonprod
+  - NONPROD
   labels: $<SHARED_PROJECT_PIPELINE_LABELS>
   elCicdDefs:
     SHARED_PROJECT_PIPELINE_LABELS:

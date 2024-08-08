@@ -1,4 +1,4 @@
-elCicdDefs-prod:
+elCicdDefs-PROD:
   EL_CICD_API_ARGS: |-
     agent: el.cicd.JENKINS_AGENT_DEFAULT,
     teamId: '$<USER_GROUP>',
@@ -29,13 +29,13 @@ elCicdDefs-deploy-project-to-prod:
       $<PROJECT_ID_PIPELINE_PARAM>
     }
 
-elCicdTemplates-prod:
+elCicdTemplates-PROD:
 - templateName: configMap
   objNames:
   - deploy-project-to-prod
   - promote-project-to-prod
   mustHaveEveryProfile:
-  - prod
+  - PROD
   labels:
     teamId: $<TEAM_ID>
     jenkins-pipeline: 'true'

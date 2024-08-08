@@ -74,7 +74,7 @@ __create_jenkins_secrets() {
     
 	if [[ "${EL_CICD_MASTER_NONPROD}" && "$(ls -A ${BUILD_SECRETS_FILE_DIR})" ]]
     then
-        local _PROFILE_FLAG="--set-string elCicdProfiles={builder-secrets}"
+        local _PROFILE_FLAG="--set-string elCicdProfiles={BUILDER_SECRETS}"
         _SET_FLAGS+="${_SET_FLAGS:+ }$(__create_builder_secret_flags)"
     fi
     

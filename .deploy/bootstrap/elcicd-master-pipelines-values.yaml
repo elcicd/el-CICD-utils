@@ -19,7 +19,7 @@ elCicdDefs:
   PROJECT_ID_PIPELINE_ARG: |-
     projectId:  el.cicd.UNDEFINED
     
-elCicdDefs-nonprod:
+elCicdDefs-NONPROD:
   PROJECT_ID_PIPELINE_PARAM: stringParam('PROJECT_ID', null, 'Project ID')
   PIPELINE_NAMES:
   - onboard-project

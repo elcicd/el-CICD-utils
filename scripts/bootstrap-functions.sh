@@ -225,13 +225,13 @@ _create_rbac_helpers() {
     local _HAS_SEALED_SECRETS=$(helm list --short --filter 'sealed-secrets' -n kube-system)
     if [[ ${INSTALL_SEALED_SECRETS} != ${_YES} || "${_HAS_SEALED_SECRETS}" ]]
     then
-        local _SET_PROFILES='sealed-secrets'
+        local _SET_PROFILES='SEALED_SECRETS'
     fi
     
     if [[ ${OKD_VERSION} ]]
     then
         local _OKD_RBAC_VALUES_FILE="${EL_CICD_DIR}/${BOOTSTRAP_CHART_DEPLOY_DIR}/elcicd-okd-scc-nonroot-builder-values.yaml"
-        _SET_PROFILES+="${_SET_PROFILES:+,}okd"
+        _SET_PROFILES+="${_SET_PROFILES:+,}OKD"
     fi
 
     echo
@@ -274,11 +274,11 @@ __bootstrap_el_cicd_onboarding_server() {
 }
 
 __create_onboarding_automation_server() {
-    local _PROFILES='onboarding'
-    _PROFILES="${_PROFILES}${OKD_VERSION:+,okd}"
-    _PROFILES="${_PROFILES}${JENKINS_MASTER_PERSISTENT:+,jenkinsPersistent}"
-    _PROFILES="${_PROFILES}${EL_CICD_MASTER_NONPROD:+,nonprod}"
-    _PROFILES="${_PROFILES}${EL_CICD_MASTER_PROD:+,prod}"
+    local _PROFILES='ONBOARDING'
+    _PROFILES="${_PROFILES}${OKD_VERSION:+,OKD}"
+    _PROFILES="${_PROFILES}${JENKINS_MASTER_PERSISTENT:+,JENKINS_PERSISTENT}"
+    _PROFILES="${_PROFILES}${EL_CICD_MASTER_NONPROD:+,NONPROD}"
+    _PROFILES="${_PROFILES}${EL_CICD_MASTER_PROD:+,PROD}"
 
     local _JENKINS_DEPLOYMENT_NAME='jenkins'
 

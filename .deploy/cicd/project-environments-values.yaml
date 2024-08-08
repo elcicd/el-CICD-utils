@@ -20,13 +20,13 @@ elCicdTemplates:
   objName: $<PROJECT_ID>-$<TEST_RUNNER_SUFFIX>
   namespaces: $<NON_PROD_CICD_NAMESPACES>
   mustHaveEveryProfile:
-  - nonprod
+  - NONPROD
 
 - templateName: roleBinding
   objName: $<PROJECT_ID>-$<TEST_RUNNER_SUFFIX>
   namespaces: $<NON_PROD_CICD_NAMESPACES>
   mustHaveEveryProfile:
-  - nonprod
+  - NONPROD
   roleRef:
     apiGroup: rbac.authorization.k8s.io
     kind: ClusterRole
@@ -40,7 +40,7 @@ elCicdTemplates:
   objNames: $<NONPROD_ENVS>
   objName: elcicd-$<>-registry-credentials
   mustHaveEveryProfile:
-  - nonprod
+  - NONPROD
   kind: Secret
   fromNamespace: $<EL_CICD_MASTER_NAMESPACE>
   toNamespace: $<PROJECT_ID>-$<BASE_OBJ_NAME>
@@ -49,7 +49,7 @@ elCicdTemplates:
   objName: elcicd-dev-registry-credentials
   namespaces: $<SANDBOX_NAMESPACES>
   mustHaveEveryProfile:
-  - nonprod
+  - NONPROD
   kind: Secret
   fromNamespace: $<EL_CICD_MASTER_NAMESPACE>
   toNamespace: $<NAME_SPACE>
@@ -58,7 +58,7 @@ elCicdTemplates:
   objName: elcicd-jenkins-registry-credentials
   namespaces: $<NON_PROD_CICD_NAMESPACES>
   mustHaveEveryProfile:
-  - nonprod
+  - NONPROD
   kind: Secret
   fromNamespace: $<EL_CICD_MASTER_NAMESPACE>
   toNamespace: $<NAME_SPACE>
@@ -67,7 +67,7 @@ elCicdTemplates:
   objName: elcicd-$<PROD_ENV>-registry-credentials
   namespaces: $<PROD_NAMESPACES>
   mustHaveEveryProfile:
-  - prod
+  - PROD
   kind: Secret
   fromNamespace: $<EL_CICD_MASTER_NAMESPACE>
   toNamespace: $<NAME_SPACE>

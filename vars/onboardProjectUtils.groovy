@@ -39,7 +39,7 @@ def getJenkinsConfigValues(def teamInfo) {
     def elCicdDefs= jenkinsConfigValues.elCicdDefs
 
     createElCicdProfiles(jenkinsConfigValues)
-    jenkinsConfigValues.elCicdProfiles += ['user-group', 'jenkinsPersistent']
+    jenkinsConfigValues.elCicdProfiles += ['user-group', 'JENKINS_PERSISTENT']
 
     if (el.cicd.EL_CICD_MASTER_NONPROD) {
         elCicdDefs.NONPROD_REGISTRY_ENVS = el.cicd.nonProdEnvs
@@ -229,15 +229,15 @@ def getElCicdChartProjectPipelineValues(def projectInfo) {
     createElCicdProfiles(pipelineValues)
 
     if (projectInfo.artifacts) {
-        pipelineValues.elCicdProfiles += 'hasArtifacts'
+        pipelineValues.elCicdProfiles += 'HAS_ARTIFACTS'
     }
 
     if (projectInfo.components) {
-        pipelineValues.elCicdProfiles += 'hasComponents'
+        pipelineValues.elCicdProfiles += 'HAS_COMPONENTS'
     }
 
     if (projectInfo.testComponents) {
-        pipelineValues.elCicdProfiles += 'hasTestComponents'
+        pipelineValues.elCicdProfiles += 'HAS_TEST_COMPONENTS'
     }
 
     getElCicdProjectCommonValues(projectInfo, elCicdDefs)
@@ -439,17 +439,17 @@ def createProjectSshKeyValues(def projectInfo) {
 }
 
 def createElCicdProfiles(def configValues) {
-    configValues.elCicdProfiles = ['cicd']
+    configValues.elCicdProfiles = ['CICD']
 
     if (el.cicd.EL_CICD_MASTER_NONPROD) {
-        configValues.elCicdProfiles += 'nonprod'
+        configValues.elCicdProfiles += 'NONPROD'
     }
 
     if (el.cicd.EL_CICD_MASTER_PROD) {
-        configValues.elCicdProfiles += 'prod'
+        configValues.elCicdProfiles += 'PROD'
     }
 
     if (el.cicd.OKD_VERSION) {
-        configValues.elCicdProfiles += 'okd'
+        configValues.elCicdProfiles += 'OKD'
     }
 }

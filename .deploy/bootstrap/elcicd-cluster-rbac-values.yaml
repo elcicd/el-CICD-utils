@@ -8,7 +8,7 @@ elCicdTemplates:
 - templateName: clusterRole
   objName: elcicd-user
   mustHaveEveryProfile:
-  - okd
+  - OKD
   labels:
     rbac.authorization.k8s.io/aggregate-to-view: "true"
   rules:
@@ -19,11 +19,11 @@ elCicdTemplates:
     verbs:
     - elcicd-user
 
-elCicdTemplates-sealed-secrets:
+elCicdTemplates-SEALED_SECRETS:
 - templateName: clusterRole
   objName: sealed-secrets-management
   mustHaveAnyProfile:
-  - sealed-secrets
+  - SEALED_SECRETS
   labels:
     rbac.authorization.k8s.io/aggregate-to-edit: "true"
   rules:

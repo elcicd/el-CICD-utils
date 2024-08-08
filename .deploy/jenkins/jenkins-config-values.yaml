@@ -16,7 +16,7 @@ elCicdDefs:
   JENKINS_PLUGINS_TXT: jenkins-plugins.txt
   JENKINS_PLUGINS_PATH: $<JENKINS_CONFIG_FILE_PATH>/$<JENKINS_PLUGINS>
 
-elCicdDefs-jenkinsPersistent:
+elCicdDefs-JENKINS_PERSISTENT:
   JENKINS_PERSISTENT_VOLUME_MNT:
     mountPath: $<JENKINS_INSTALL_DIR>
     name: $<JENKINS_SERVICE_NAME>-data
@@ -127,7 +127,7 @@ elCicdTemplates:
 
 - templateName: persistentVolumeClaim
   mustHaveAnyProfile:
-  - jenkinsPersistent
+  - JENKINS_PERSISTENT
   objName: $<JENKINS_SERVICE_NAME>
   storageRequest: $<VOLUME_CAPACITY>
   accessMode: ReadWriteMany
@@ -163,7 +163,7 @@ elCicdTemplates:
 - templateName: configMap
   objName: openshift-jenkins-login-plugin-config
   mustHaveEveryProfile:
-  - okd
+  - OKD
   data:
     Overall-Administer: admin,edit
     Overall-Read: admin,edit,elcicd-user
@@ -183,9 +183,9 @@ elCicdTemplates:
 - templateName: clusterRoleBinding
   objName: $<JENKINS_SERVICE_NAME>-$<HELM_RELEASE_NAMESPACE>-admin
   mustHaveAnyProfile:
-  - onboarding
+  - ONBOARDING
   mustNotHaveAnyProfile:
-  - cicd
+  - CICD
   roleRef:
     apiGroup: rbac.authorization.k8s.io
     kind: ClusterRole
@@ -198,16 +198,16 @@ elCicdTemplates:
 - templateName: serviceAccount
   objName: $<JENKINS_REMOTE_SERVICE_NAME>
   mustHaveAnyProfile:
-  - onboarding
+  - ONBOARDING
   mustNotHaveAnyProfile:
-  - cicd
+  - CICD
 
 - templateName: clusterRoleBinding
   objName: $<JENKINS_REMOTE_SERVICE_NAME>
   mustHaveAnyProfile:
-  - onboarding
+  - ONBOARDING
   mustNotHaveAnyProfile:
-  - cicd
+  - CICD
   roleRef:
     apiGroup: rbac.authorization.k8s.io
     kind: ClusterRole
@@ -220,10 +220,10 @@ elCicdTemplates:
 - templateName: roleBinding
   objName: $<JENKINS_SERVICE_NAME>-$<HELM_RELEASE_NAMESPACE>-nonroot-builder
   mustHaveAnyProfile:
-  - cicd
-  - okd
+  - CICD
+  - OKD
   mustNotHaveAnyProfile:
-  - onboarding
+  - ONBOARDING
   roleRef:
     apiGroup: rbac.authorization.k8s.io
     kind: ClusterRole
@@ -246,14 +246,14 @@ elCicdTemplates:
 
 - templateName: configMap
   mustHaveAnyProfile:
-  - onboarding
+  - ONBOARDING
   objName: $<EL_CICD_META_INFO_NAME>
   data: $<EL_CICD_META_INFO>
 
 - templateName: roleBinding
   objName: $<USER_GROUP>-jenkins-elcicd-user
   mustHaveAnyProfile:
-  - cicd
+  - CICD
   roleRef:
     apiGroup: rbac.authorization.k8s.io
     kind: ClusterRole
@@ -266,7 +266,7 @@ elCicdTemplates:
 - templateName: copyResource
   objName: $<EL_CICD_META_INFO_NAME>
   mustHaveAnyProfile:
-  - cicd
+  - CICD
   kind: ConfigMap
   fromNamespace: $<EL_CICD_MASTER_NAMESPACE>
   toNamespace: $<HELM_RELEASE_NAMESPACE>
@@ -274,7 +274,7 @@ elCicdTemplates:
 - templateName: copyResource
   objNames: $<EL_CICD_GIT_REPOS_READ_ONLY_KEYS>
   mustHaveAnyProfile:
-  - cicd
+  - CICD
   kind: Secret
   fromNamespace: $<EL_CICD_MASTER_NAMESPACE>
   toNamespace: $<HELM_RELEASE_NAMESPACE>
@@ -282,7 +282,7 @@ elCicdTemplates:
 - templateName: copyResource
   objName: elcicd-jenkins-registry-credentials
   mustHaveAnyProfile:
-  - cicd
+  - CICD
   kind: Secret
   fromNamespace: $<EL_CICD_MASTER_NAMESPACE>
   toNamespace: $<HELM_RELEASE_NAMESPACE>
@@ -290,7 +290,7 @@ elCicdTemplates:
 - templateName: copyResource
   objName: $<EL_CICD_BUILD_SECRETS_NAME>
   mustHaveAnyProfile:
-  - cicd
+  - CICD
   kind: Secret
   fromNamespace: $<EL_CICD_MASTER_NAMESPACE>
   toNamespace: $<HELM_RELEASE_NAMESPACE>
@@ -299,7 +299,7 @@ elCicdTemplates:
   objNames: $<PROD_REGISTRY_ENVS>
   objName: elcicd-$<>-registry-credentials
   mustHaveEveryProfile:
-  - cicd
+  - CICD
   - prod
   kind: Secret
   fromNamespace: $<EL_CICD_MASTER_NAMESPACE>
@@ -309,8 +309,8 @@ elCicdTemplates:
   objNames: $<NONPROD_REGISTRY_ENVS>
   objName: elcicd-$<>-registry-credentials
   mustHaveEveryProfile:
-  - cicd
-  - nonprod
+  - CICD
+  - NONPROD
   kind: Secret
   fromNamespace: $<EL_CICD_MASTER_NAMESPACE>
   toNamespace: $<HELM_RELEASE_NAMESPACE>
@@ -318,7 +318,7 @@ elCicdTemplates:
 - templateName: copyResource
   objName: elcicd-helm-registry-credentials
   mustHaveEveryProfile:
-  - cicd
+  - CICD
   kind: Secret
   fromNamespace: $<EL_CICD_MASTER_NAMESPACE>
   toNamespace: $<HELM_RELEASE_NAMESPACE>

@@ -279,13 +279,13 @@ __setup_image_registries() {
         local _OBJ_NAME=${REGISTRY_NAME}-${DEMO_OCI_REGISTRY}
         local _OBJ_NAMES=${_OBJ_NAMES:+${_OBJ_NAMES},}${_OBJ_NAME}
         local _HTPASSWD=$(htpasswd -Bbn elcicd${REGISTRY_NAME} ${DEMO_OCI_REGISTRY_USER_PWD})
-        local _HTPASSWDS="${_HTPASSWDS:+${_HTPASSWDS} } --set-string elCicdDefs-htpasswd.${_OBJ_NAME}_HTPASSWD=${_HTPASSWD}"
+        local _HTPASSWDS="${_HTPASSWDS:+${_HTPASSWDS} } --set-string elCicdDefs-HTPASSWD.${_OBJ_NAME}_HTPASSWD=${_HTPASSWD}"
     done
-    local _PROFILES='htpasswd'
+    local _PROFILES='HTPASSWD'
     if [[ ${SETUP_REGISTRY_NFS} == ${_YES} ]]
     then
         __create_image_registry_nfs_share
-        _PROFILES+=",nfs"
+        _PROFILES+=",NFS"
     fi
 
     DEMO_OCI_REGISTRY_HOST_IP=$(ip route get 1 | awk '{print $(NF-2);exit}')
