@@ -88,7 +88,7 @@ def node(Map args, Closure body) {
             containers:
             - name: 'jnlp'
               image: "${el.cicd.JENKINS_OCI_REGISTRY}/${el.cicd.JENKINS_AGENT_IMAGE_PREFIX}-${jenkinsAgent}:latest"
-              envFrom
+              envFrom:
               - configMapRef:
                   name: ${el.cicd.EL_CICD_META_INFO_NAME}
                   prefix: elcicd_              
