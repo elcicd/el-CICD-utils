@@ -72,7 +72,7 @@ def node(Map args, Closure body) {
     }
 
     def podSpec = "${libraryResource('agentPodSpec.yaml')}"
-    echo podSpec
+    echo "${podSpec}"
 
     podTemplate([
         label: "${jenkinsAgent}",
