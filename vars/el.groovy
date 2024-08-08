@@ -83,6 +83,8 @@ def node(Map args, Closure body) {
         elCicdMetaInfoConfigMapRef = ''
     }
 
+    echo "volumes: ${volumeDefs}"
+
     podTemplate([
         label: "${jenkinsAgent}",
         cloud: 'openshift',
