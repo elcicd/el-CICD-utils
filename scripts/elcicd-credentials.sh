@@ -74,7 +74,7 @@ __create_jenkins_secrets() {
     
 	if [[ "${EL_CICD_MASTER_NONPROD}" && "$(ls -A ${BUILD_SECRETS_FILE_DIR})" ]]
     then
-        local _PROFILE_FLAG="--set-string elCicdProfiles={BUILDER_SECRETS}"
+        local _BUILDER_SECRETS_PROFILE='BUILDER_SECRETS'
         _SET_FLAGS+="${_SET_FLAGS:+ }$(__create_builder_secret_flags)"
     fi
     
@@ -90,7 +90,7 @@ __create_jenkins_secrets() {
     local _GIT_REPO_KEYS="${EL_CICD_GIT_REPO_READ_ONLY_GITHUB_PRIVATE_KEY_ID},${EL_CICD_CONFIG_GIT_REPO_READ_ONLY_GITHUB_PRIVATE_KEY_ID}"
     set -e
     helm upgrade --install --atomic --create-namespace --history-max=1 \
-        ${_PROFILE_FLAG}  \
+        --set elCicdProfiles="{${_BUILDER_SECRETS_PROFILE}}"  \
         --set-string elCicdDefs.BUILD_SECRETS_NAME=${EL_CICD_BUILD_SECRETS_NAME} \
         --set-string elCicdDefs.OCI_REGISTRY_IDS="{${_OCI_REGISTRY_IDS}}" \
         --set-string elCicdDefs.GIT_REPO_SSH_KEY_IDS="{${_GIT_REPO_KEYS}}" \
