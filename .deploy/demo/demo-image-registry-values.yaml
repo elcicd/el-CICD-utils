@@ -22,7 +22,7 @@ elCicdDefs-HTPASSWD:
     secret:
       secretName: $<OBJ_NAME>
       
-elCicdDefs-nfs:
+elCicdDefs-NFS:
   STORAGE_CLASS_NAME: demo-image-registry-nfs
   VOLUME_MNT_NFS:
     name: $<DEMO_OCI_REGISTRY>
@@ -68,7 +68,7 @@ elCicdTemplates:
 - templateName: persistentVolume
   objName: $<DEMO_OCI_REGISTRY>-nfs
   mustHaveAnyProfile:
-  - nfs
+  - NFS
   storageClassName: $<STORAGE_CLASS_NAME>
   storageCapacity: 10Gi
   accessModes:
@@ -80,7 +80,7 @@ elCicdTemplates:
 - templateName: persistentVolumeClaim
   objName: $<DEMO_OCI_REGISTRY>-nfs-pvc
   mustHaveAnyProfile:
-  - nfs
+  - NFS
   storageClassName: $<STORAGE_CLASS_NAME>
   volumeName: $<DEMO_OCI_REGISTRY>-nfs
   accessMode: ReadWriteMany
