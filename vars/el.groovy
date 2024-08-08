@@ -62,20 +62,9 @@ def initMetaData(Map metaData) {
 }
 
 def node(Map args, Closure body) {
-    def jenkinsAgent = args.agent ?: el.cicd.JENKINS_AGENT_DEFAULT
-
-    def volumeDefs = [
-        emptyDirVolume(mountPath: '/home/jenkins/agent', memory: true),
-        emptyDirVolume(mountPath: '/home/.local/share/containers')
-    ]
-
-    if (args.isBuild) {
-        volumeDefs += secretVolume(secretName: "${el.cicd.EL_CICD_BUILD_SECRETS_NAME}", mountPath: "${el.cicd.BUILDER_SECRETS_DIR}/")
-    }
-    
+    def jenkinsAgent = args.agent ?: el.cicd.JENKINS_AGENT_DEFAULT    
     def agentNamespace = null
     def serviceAccountName = el.cicd.JENKINS_SERVICE_ACCOUNT
-    def elCicdMetaInfoConfigMapRef = /envFrom: [{"configMapRef": { "name": "${el.cicd.EL_CICD_META_INFO_NAME}" }, "prefix": "elcicd_"}]/
     if (args.isTest) {
         agentNamespace = "${args.projectId}-${args.testEnv}"
         serviceAccountName = "${args.projectId}-${el.cicd.TEST_SERVICE_ACCOUNT_SUFFIX}"
@@ -83,32 +72,48 @@ def node(Map args, Closure body) {
     }
 
     podTemplate([
-        label: "${jenkinsAgent}",
         cloud: 'openshift',
         idleMinutes: "${args.isTest ? '0' : el.cicd.JENKINS_AGENT_MEMORY_IDLE_MINUTES}",
-        imagePullSecrets: 'elcicd-jenkins-registry-credentials',
-        namespace: agentNamespace,
-        nodeSelector: "${el.cicd.JENKINS_AGENT_NODE_SELECETOR}",
-        serviceAccount: "${serviceAccountName}",
+        nodeSelector: "${el.cicd.JENKINS_AGENT_NODE_SELECTOR}",
         showRawYaml: true,
-        volumes: volumeDefs,
-        containerTemplate(
-            name: 'jnlp',
-            alwaysPullImage: true,
-            image: "${el.cicd.JENKINS_OCI_REGISTRY}/${el.cicd.JENKINS_AGENT_IMAGE_PREFIX}-${jenkinsAgent}",
-            resourceRequestCpu: "${el.cicd.JENKINS_AGENT_CPU_REQUEST}",
-            resourceRequestMemory: "${el.cicd.JENKINS_AGENT_MEMORY_REQUEST}",
-            resourceLimitMemory: "${el.cicd.JENKINS_AGENT_MEMORY_LIMIT}",
-        ),
         yaml: """
+          metadata:
+            labels:
+              jenkins/label: "${jenkinsAgent}"         
+            namespace: ${agentNamespace}
           spec:
+            alwaysPullImage: true
+            imagePullSecrets:
+            - elcicd-jenkins-registry-credentials
             containers:
-            - name: 'jnlp',
-              envFrom:
+            - name: 'jnlp'
+              image: "${el.cicd.JENKINS_OCI_REGISTRY}/${el.cicd.JENKINS_AGENT_IMAGE_PREFIX}-${jenkinsAgent}:latest"
+              envFrom
               - configMapRef:
-                  name: "${el.cicd.EL_CICD_META_INFO_NAME}"
+                  name: ${el.cicd.EL_CICD_META_INFO_NAME}
+                  prefix: elcicd_              
+              volumeMounts:
+              - mountPath: /home/jenkins/agent
+                name: agent-home-volume
+              - mountPath: ${el.cicd.BUILDER_SECRETS_DIR ? el.cicd.BUILDER_SECRETS_DIR : "/mnt"}
+                name: build-secrets
+            nodeSelector:
+              "${el.cicd.JENKINS_AGENT_NODE_SELECTOR}"
+            resources:
+              requests:
+                memory: ${el.cicd.JENKINS_AGENT_MEMORY_REQUEST}
+                cpu: ${el.cicd.JENKINS_AGENT_CPU_REQUEST}
+              limits:
+                memory: ${el.cicd.JENKINS_AGENT_MEMORY_LIMIT}
+            serviceAccountName: "${serviceAccountName}"
+            volumes:
+            - name: agent-home-volume
+              emptyDir:
+                sizeLimit: 500Mi
+            - name: build-secrets
+              optional: true
+              secretName: ${el.cicd.EL_CICD_BUILD_SECRETS_NAME}
         """,
-        yamlMergeStrategy: "merge",
     ]) {
         node(jenkinsAgent) {
             try {
