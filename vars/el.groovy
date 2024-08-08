@@ -99,7 +99,7 @@ def node(Map args, Closure body) {
             resourceRequestCpu: "${el.cicd.JENKINS_AGENT_CPU_REQUEST}",
             resourceRequestMemory: "${el.cicd.JENKINS_AGENT_MEMORY_REQUEST}",
             resourceLimitMemory: "${el.cicd.JENKINS_AGENT_MEMORY_LIMIT}",
-        ]
+        ],
         yaml: """
           spec:
             containers:
