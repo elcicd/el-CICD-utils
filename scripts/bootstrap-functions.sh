@@ -238,7 +238,7 @@ _create_rbac_helpers() {
     echo 'Installing el-CICD RBAC helpers.'
     echo
     set -ex
-    helm upgrade --install --atomic --history-max=1 \
+    helm upgrade --install --atomic --create-namespace --history-max=1 \
         --set-string elCicdProfiles={${_SET_PROFILES}} \
         -f ${_OKD_RBAC_VALUES_FILE} \
         -f ${EL_CICD_DIR}/${BOOTSTRAP_CHART_DEPLOY_DIR}/elcicd-cluster-rbac-values.yaml \
