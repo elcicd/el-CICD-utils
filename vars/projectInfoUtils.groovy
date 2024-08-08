@@ -232,7 +232,7 @@ def validateProjectInfo(def projectInfo) {
     }
 
     projectInfo.enabledTestEnvs.each { env ->
-        assert el.cicd.testEnvs.contains(env) : "test environment '${env}' must be in [${el.cicd.testEnvs}]"
+        assert el.cicd.TEST_ENVS.contains(env) : "test environment '${env}' must be in [${el.cicd.testEnvs}]"
     }
 
     validateProjectPvs(projectInfo)

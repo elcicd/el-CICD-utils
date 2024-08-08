@@ -21,7 +21,7 @@ elCicdTemplates:
   projectedVolumes:
   - name: mounted-$<JENKINS>-$<JOBS_DIR>
     mountPath: $<MOUNT_DIR>
-    configMapLabels:
+    configMapsByLabels:
       $<JENKINS>-pipeline: {}
   serviceAccountName: $<JENKINS>
   command: ["/bin/bash", "-c"]
