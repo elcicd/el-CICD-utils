@@ -38,6 +38,8 @@ elCicdTemplates:
     EL_CICD_API_METHOD: buildModule
     EL_CICD_API_ARGS: |-
       $<BUILD_MODULE_ARGS>
+    EXTRA_BUILD_ARGS: |-
+      isBuild: true
     AUTH_TOKEN: $<PROJECT_ID>-$<BASE_OBJ_NAME>-git-repo-private-contentkey
   data: $<PROJECT_PIPELINE_CONFIG_MAP_DATA>
 
@@ -59,6 +61,7 @@ elCicdTemplates:
     EL_CICD_API_ARGS: |-
       $<BUILD_MODULE_ARGS>
     EXTRA_BUILD_ARGS: |-
+      isBuild: true,
       deployToNamespace: params.DEPLOY_TO_NAMESPACE,
       recreate: params.REINSTALL
     AUTH_TOKEN: $<PROJECT_ID>-$<BASE_OBJ_NAME>-git-repo-private-contentkey
