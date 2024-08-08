@@ -92,14 +92,14 @@ def node(Map args, Closure body) {
         serviceAccount: "${serviceAccountName}",
         showRawYaml: true,
         volumes: volumeDefs,
-        containers: [
+        containerTemplate(
             name: 'jnlp',
             alwaysPullImage: true,
             image: "${el.cicd.JENKINS_OCI_REGISTRY}/${el.cicd.JENKINS_AGENT_IMAGE_PREFIX}-${jenkinsAgent}",
             resourceRequestCpu: "${el.cicd.JENKINS_AGENT_CPU_REQUEST}",
             resourceRequestMemory: "${el.cicd.JENKINS_AGENT_MEMORY_REQUEST}",
             resourceLimitMemory: "${el.cicd.JENKINS_AGENT_MEMORY_LIMIT}",
-        ],
+        ),
         yaml: """
           spec:
             containers:
