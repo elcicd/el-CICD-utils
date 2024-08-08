@@ -76,7 +76,7 @@ def node(Map args, Closure body) {
         cloud: 'openshift',
         idleMinutes: "${args.isTest ? '0' : el.cicd.JENKINS_AGENT_MEMORY_IDLE_MINUTES}",
         namespace: agentNamespace,
-        nodeSelector: "${el.cicd.JENKINS_AGENT_NODE_SELECETOR}",
+        nodeSelector: "${el.cicd.JENKINS_AGENT_NODE_SELECTOR}",
         showRawYaml: true,
         yaml: """
           spec:
@@ -96,7 +96,7 @@ def node(Map args, Closure body) {
               envFrom:
               - configMapRef:
                   name: ${el.cicd.EL_CICD_META_INFO_NAME}
-                  prefix: elcicd_
+                prefix: elcicd_
               volumeMounts:
               - mountPath: /home/jenkins/agent
                 name: agent-home-volume
