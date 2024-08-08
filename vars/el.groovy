@@ -109,7 +109,7 @@ def node(Map args, Closure body) {
                     name: "${el.cicd.EL_CICD_META_INFO_NAME}"
                     prefix: "elcicd_"
         """,
-        yamlMergeStrategy: merge,
+        yamlMergeStrategy: "merge",
     ]) {
         node(jenkinsAgent) {
             try {
