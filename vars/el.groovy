@@ -78,44 +78,13 @@ def node(Map args, Closure body) {
         namespace: agentNamespace,
         nodeSelector: "${el.cicd.JENKINS_AGENT_NODE_SELECTOR}",
         showRawYaml: true,
-        yaml: """
-          spec:
-            imagePullSecrets:
-            - 'elcicd-jenkins-registry-credentials'
-            serviceAccount: "${serviceAccountName}"
-            alwaysPullImage: true
-            resources:
-              requests:
-                memory: ${el.cicd.JENKINS_AGENT_MEMORY_REQUEST}
-                cpu: ${el.cicd.JENKINS_AGENT_CPU_REQUEST}
-              limits:
-                memory: ${el.cicd.JENKINS_AGENT_MEMORY_LIMIT}
-            containers:
-            - name: 'jnlp'
-              image: "${el.cicd.JENKINS_OCI_REGISTRY}/${el.cicd.JENKINS_AGENT_IMAGE_PREFIX}-${jenkinsAgent}:latest"
-              envFrom:
-              - configMapRef:
-                  name: ${el.cicd.EL_CICD_META_INFO_NAME}
-                prefix: elcicd_
-              volumeMounts:
-              - mountPath: /home/jenkins/agent
-                name: agent-home-volume
-              - mountPath: ${el.cicd.BUILDER_SECRETS_DIR ? el.cicd.BUILDER_SECRETS_DIR : "/mnt"}
-                name: build-secrets
-            volumes:
-            - name: agent-home-volume
-              emptyDir: {}
-            - name: build-secrets
-              secret:
-                secretName: ${el.cicd.EL_CICD_BUILD_SECRETS_NAME}
-                optional: true
-        """
+        yaml: readTrusted('agentPodSpec.yaml'),
     ]) {
         node(jenkinsAgent) {
             try {
                 withCredentials([usernamePassword(credentialsId: el.cicd.EL_CICD_HELM_OCI_REGISTRY_CREDENTIALS,
-                                usernameVariable: 'HELM_REGISTRY_USERNAME',
-                                passwordVariable: 'HELM_REGISTRY_PASSWORD')]) {
+                                 usernameVariable: 'HELM_REGISTRY_USERNAME',
+                                 passwordVariable: 'HELM_REGISTRY_PASSWORD')]) {
                     initializePipeline(jenkinsAgent)
 
                     runHookScript(el.cicd.PRE, args)
