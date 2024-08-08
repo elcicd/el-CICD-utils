@@ -144,8 +144,9 @@ def initProjectEnvNamespaceData(def projectInfo) {
 
     projectInfo.hotfixEnv = el.cicd.hotfixEnv
 
-    projectInfo.testEnvs = (el.cicd.TEST_ENVS && projectInfo.enabledTestEnvs) ?
+    projectInfo.TEST_ENVS = (el.cicd.TEST_ENVS && projectInfo.enabledTestEnvs) ?
         el.cicd.TEST_ENVS.findAll { projectInfo.enabledTestEnvs.contains(it) } : []
+    projectInfo.testEnvs = projectInfo.TEST_ENVS.collect { it.toLowerCase() }
 
     projectInfo.preProdEnv = el.cicd.preProdEnv
     projectInfo.prodEnv = el.cicd.prodEnv
@@ -162,7 +163,6 @@ def initProjectEnvNamespaceData(def projectInfo) {
     projectInfo.PRE_PROD_ENV = el.cicd.PRE_PROD_ENV
     projectInfo.PROD_ENV = el.cicd.PROD_ENV
 
-    projectInfo.TEST_ENVS = projectInfo.testEnvs.collect { it.toUpperCase() }
     projectInfo.NON_PROD_ENVS = projectInfo.nonProdEnvs.collect { it.toUpperCase() }
 
     projectInfo.devNamespace = "${projectInfo.id}-${projectInfo.devEnv}"
