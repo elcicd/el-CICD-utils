@@ -63,7 +63,7 @@ def initMetaData(Map metaData) {
 
 def node(Map args, Closure body) {
     def jenkinsAgent = args.agent ?: el.cicd.JENKINS_AGENT_DEFAULT
-    
+
     def agentNamespace = null
     def serviceAccountName = el.cicd.JENKINS_SERVICE_ACCOUNT
     if (args.isTest) {
@@ -101,9 +101,7 @@ def node(Map args, Closure body) {
               - mountPath: /home/jenkins/agent
                 name: agent-home-volume
               - mountPath: ${el.cicd.BUILDER_SECRETS_DIR ? el.cicd.BUILDER_SECRETS_DIR : "/mnt"}
-                name: build-secrets     
-            securityContext:
-              fsGroup: ${fsGroup}
+                name: build-secrets
             volumes:
             - name: agent-home-volume
               emptyDir:
