@@ -78,7 +78,7 @@ def node(Map args, Closure body) {
         namespace: agentNamespace,
         nodeSelector: "${el.cicd.JENKINS_AGENT_NODE_SELECTOR}",
         showRawYaml: true,
-        yaml: readFile('agentPodSpec.yaml'),
+        yaml: libraryResource('agentPodSpec.yaml'),
     ]) {
         node(jenkinsAgent) {
             try {
