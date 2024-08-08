@@ -86,7 +86,7 @@ def node(Map args, Closure body) {
         label: "${jenkinsAgent}",
         cloud: 'openshift',
         idleMinutes: "${args.isTest ? '0' : el.cicd.JENKINS_AGENT_MEMORY_IDLE_MINUTES}",
-        imagePullSecrets: 'elcicd-jenkins-registry-credentials'
+        imagePullSecrets: 'elcicd-jenkins-registry-credentials',
         namespace: agentNamespace,
         nodeSelector: "${el.cicd.JENKINS_AGENT_NODE_SELECETOR}",
         serviceAccount: "${serviceAccountName}",
