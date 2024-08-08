@@ -71,9 +71,6 @@ def node(Map args, Closure body) {
         serviceAccountName = "${args.projectId}-${el.cicd.TEST_SERVICE_ACCOUNT_SUFFIX}"
     }
 
-    def podSpec = "${libraryResource('agentPodSpec.yaml')}"
-    echo "${podSpec}"
-
     podTemplate([
         label: "${jenkinsAgent}",
         cloud: 'openshift',
@@ -81,7 +78,38 @@ def node(Map args, Closure body) {
         namespace: agentNamespace,
         nodeSelector: "${el.cicd.JENKINS_AGENT_NODE_SELECTOR}",
         showRawYaml: true,
-        yaml: podSpec
+        yaml: """
+          spec:
+            imagePullSecrets:
+            - 'elcicd-jenkins-registry-credentials'
+            serviceAccount: "${serviceAccountName}"
+            alwaysPullImage: true
+            resources:
+              requests:
+                memory: ${el.cicd.JENKINS_AGENT_MEMORY_REQUEST}
+                cpu: ${el.cicd.JENKINS_AGENT_CPU_REQUEST}
+              limits:
+                memory: ${el.cicd.JENKINS_AGENT_MEMORY_LIMIT}
+            containers:
+            - name: 'jnlp'
+              image: "${el.cicd.JENKINS_OCI_REGISTRY}/${el.cicd.JENKINS_AGENT_IMAGE_PREFIX}-${jenkinsAgent}:latest"
+              envFrom:
+              - configMapRef:
+                  name: ${el.cicd.EL_CICD_META_INFO_NAME}
+                prefix: elcicd_
+              volumeMounts:
+              - mountPath: /home/jenkins/agent
+                name: agent-home-volume
+              - mountPath: "${el.cicd.BUILDER_SECRETS_DIR ? el.cicd.BUILDER_SECRETS_DIR : '/mnt'}"
+                name: build-secrets
+            volumes:
+            - name: agent-home-volume
+              emptyDir: {}
+            - name: build-secrets
+              secret:
+                secretName: ${el.cicd.EL_CICD_BUILD_SECRETS_NAME}
+                optional: true        
+        """
     ]) {
         node(jenkinsAgent) {
             try {
