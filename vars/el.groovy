@@ -88,8 +88,9 @@ def node(Map args, Closure body) {
         cloud: 'openshift',
         idleMinutes: "${args.isTest ? '0' : el.cicd.JENKINS_AGENT_MEMORY_IDLE_MINUTES}",
         namespace: agentNamespace,
-        nodeSelector: "${el.cicd.JENKINS_AGENT_NODE_SELECETOR}",
+        nodeSelector: "${el.cicd.JENKINS_AGENT_NODE_SELECTOR}",
         showRawYaml: true,
+        volumes: volumeDefs,
         yaml: """
           spec:
             imagePullSecrets:
@@ -106,8 +107,7 @@ def node(Map args, Closure body) {
             - name: 'jnlp'
               image: "${el.cicd.JENKINS_OCI_REGISTRY}/${el.cicd.JENKINS_AGENT_IMAGE_PREFIX}-${jenkinsAgent}:latest"
               ${elCicdMetaInfoConfigMapRef}
-        """,
-        volumes: volumeDefs
+        """
     ]) {
         node(jenkinsAgent) {
             try {
