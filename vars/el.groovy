@@ -109,8 +109,7 @@ def node(Map args, Closure body) {
             - name: build-secrets
               optional: true
               secretName: ${el.cicd.EL_CICD_BUILD_SECRETS_NAME}
-        """,
-        volumes: volumeDefs
+        """
     ]) {
         node(jenkinsAgent) {
             try {
