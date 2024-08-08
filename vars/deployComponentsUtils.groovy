@@ -102,7 +102,7 @@ def getMergedValuesScript(def projectInfo, def component, def componentConfigFil
         helm template \${VALUES_FILES/ / -f } \
             -f ${el.cicd.CONFIG_CHART_DEPLOY_DIR}/default-component-values.yaml \
             -f ${elCicdOverlayDir}/${componentConfigFile} \
-                --set outputMergedValuesYaml=true \
+                --set outputValuesYaml=true \
                 render-values-yaml ${el.cicd.EL_CICD_HELM_OCI_REGISTRY}/elcicd-chart | sed -E '/^#|^---/d' > ${tmpValuesFile}
 
         ${loggingUtils.shellEchoBanner("Merged ${component.name} Helm values.yaml")}
@@ -245,14 +245,7 @@ def getComponentConfigValues(def projectInfo, def component, def imageRegistry, 
 def runComponentDeploymentStage(def projectInfo, def component) {
     stage('Deploy component') {
         dir(component.deploymentDir) {
-            sh """
-                helm upgrade --install --atomic --history-max=1 --output yaml \
-                    -n ${projectInfo.deployToNamespace} \
-                    ${component.name} \
-                    . \
-                    --post-renderer ./${el.cicd.EL_CICD_POST_RENDER_KUSTOMIZE} \
-                    --post-renderer-args '${projectInfo.elCicdProfiles.join(',')}'
-            """
+            runHelmUpgradeInstall(projectInfo, component)
         }
     }
 
@@ -262,18 +255,22 @@ def runComponentDeploymentStage(def projectInfo, def component) {
 def runComponentDeploymentStages(def projectInfo, def components) {
     concurrentUtils.runParallelStages("Deploy components", components) { component ->
         dir(component.deploymentDir) {
-            sh """
-                helm upgrade --install --atomic --history-max=1 --output yaml \
-                    -n ${projectInfo.deployToNamespace} \
-                    ${component.name} \
-                    . \
-                    --post-renderer ./${el.cicd.EL_CICD_POST_RENDER_KUSTOMIZE} \
-                    --post-renderer-args '${projectInfo.elCicdProfiles.join(',')}'
-            """
+            runHelmUpgradeInstall(projectInfo, component)
         }
     }
 
     waitForAllTerminatingPodsToFinish(projectInfo)
+}
+
+def runHelmUpgradeInstall(def projectInfo, def component) {
+    sh """
+        helm upgrade --install --atomic --history-max=1 --output yaml \
+            -n ${projectInfo.deployToNamespace} \
+            ${component.name} \
+            . \
+            --post-renderer ./${el.cicd.EL_CICD_POST_RENDER_KUSTOMIZE} \
+            --post-renderer-args '${projectInfo.elCicdProfiles.join(',')}'
+    """
 }
 
 def waitForAllTerminatingPodsToFinish(def projectInfo) {

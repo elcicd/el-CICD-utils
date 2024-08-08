@@ -28,11 +28,10 @@ elCicdTemplates-scc:
     - KILL
     - MKNOD
     runAsUser:
-      type: MustRunAsNonRoot
+      type: MustRunAs
+      uid: 1001
     seLinuxContext:
       type: MustRunAs
-    seccompProfiles:
-    - runtime/default
     supplementalGroups:
       type: RunAsAny
     volumes:
