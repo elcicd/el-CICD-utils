@@ -243,7 +243,7 @@ def validateProjectPvs(def projectInfo) {
     projectInfo.staticPvs.each { pv ->
         assert pv.envs : "missing persistent volume environments"
         pv.envs.each { env ->
-            assert projectInfo.nonProdEnvs.contains(env) || env == projectInfo.prodEnv
+            assert projectInfo.NON_PROD_ENVS.contains(env) || env == projectInfo.prodEnv
         }
 
         assert pv.capacity ==~ /\d{1,4}(Mi|Gi)/ : "pv.capacity missing or invalid format \\d{1,4}(Mi|Gi): '${pv.capacity}'"
