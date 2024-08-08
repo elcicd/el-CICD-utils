@@ -106,8 +106,6 @@ def node(Map args, Closure body) {
             - name: 'jnlp'
               image: "${el.cicd.JENKINS_OCI_REGISTRY}/${el.cicd.JENKINS_AGENT_IMAGE_PREFIX}-${jenkinsAgent}:latest"
               ${elCicdMetaInfoConfigMapRef}
-            securityContext:
-              fsGroup: ${fsGroup}
         """,
         volumes: volumeDefs
     ]) {
