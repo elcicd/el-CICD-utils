@@ -98,7 +98,7 @@ def node(Map args, Closure body) {
               - mountPath: ${el.cicd.BUILDER_SECRETS_DIR ? el.cicd.BUILDER_SECRETS_DIR : "/mnt"}
                 name: build-secrets
             nodeSelector:
-              "${el.cicd.JENKINS_AGENT_NODE_SELECTOR}"
+              ${el.cicd.JENKINS_AGENT_NODE_SELECTOR}
             resources:
               requests:
                 memory: ${el.cicd.JENKINS_AGENT_MEMORY_REQUEST}
