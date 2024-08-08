@@ -65,7 +65,8 @@ def node(Map args, Closure body) {
     def jenkinsAgent = args.agent ?: el.cicd.JENKINS_AGENT_DEFAULT
 
     def volumeDefs = [
-        emptyDirVolume(mountPath: '/home/jenkins/agent', memory: true)
+        emptyDirVolume(mountPath: '/home/jenkins/agent', memory: true),
+        emptyDirVolume(mountPath: '/home/.local/share/containers')
     ]
 
     if (args.isBuild) {
