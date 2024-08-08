@@ -71,7 +71,8 @@ def node(Map args, Closure body) {
         serviceAccountName = "${args.projectId}-${el.cicd.TEST_SERVICE_ACCOUNT_SUFFIX}"
     }
 
-    def podSpec = libraryResource('agentPodSpec.yaml')
+    def podSpec = "${libraryResource('agentPodSpec.yaml')}"
+    echo podSpec
 
     podTemplate([
         label: "${jenkinsAgent}",
