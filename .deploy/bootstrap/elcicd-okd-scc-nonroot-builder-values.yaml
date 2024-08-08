@@ -23,7 +23,6 @@ elCicdTemplates-scc:
     allowPrivilegedContainer: false
     fsGroup:
       type: RunAsAny
-    priority: 5
     readOnlyRootFilesystem: false
     requiredDropCapabilities:
     - KILL

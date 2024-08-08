@@ -181,7 +181,7 @@ elCicdTemplates:
     serviceaccounts.openshift.io/oauth-redirecturi.jenkins: https://$<JENKINS_URL>
 
 - templateName: clusterRoleBinding
-  objName: $<JENKINS_SERVICE_NAME>-$<HELM_RELEASE_NAMESPACE>-admin
+  objName: $<JENKINS_SERVICE_NAME>-$<HELM_RELEASE_NAMESPACE>-cluster-admin
   mustHaveAnyProfile:
   - ONBOARDING
   mustNotHaveAnyProfile:
@@ -300,7 +300,7 @@ elCicdTemplates:
   objName: elcicd-$<>-registry-credentials
   mustHaveEveryProfile:
   - CICD
-  - prod
+  - PROD
   kind: Secret
   fromNamespace: $<EL_CICD_MASTER_NAMESPACE>
   toNamespace: $<HELM_RELEASE_NAMESPACE>
