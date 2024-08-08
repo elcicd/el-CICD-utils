@@ -75,12 +75,10 @@ def node(Map args, Closure body) {
     
     def agentNamespace = null
     def serviceAccountName = el.cicd.JENKINS_SERVICE_ACCOUNT
-    def fsGroup = "1001"
     def elCicdMetaInfoConfigMapRef = /envFrom: [{"configMapRef": { "name": "${el.cicd.EL_CICD_META_INFO_NAME}" }, "prefix": "elcicd_"}]/
     if (args.isTest) {
         agentNamespace = "${args.projectId}-${args.testEnv}"
         serviceAccountName = "${args.projectId}-${el.cicd.TEST_SERVICE_ACCOUNT_SUFFIX}"
-        fsGroup = ''
         elCicdMetaInfoConfigMapRef = ''
     }
 
@@ -88,29 +86,30 @@ def node(Map args, Closure body) {
         label: "${jenkinsAgent}",
         cloud: 'openshift',
         idleMinutes: "${args.isTest ? '0' : el.cicd.JENKINS_AGENT_MEMORY_IDLE_MINUTES}",
+        imagePullSecrets: 'elcicd-jenkins-registry-credentials'
         namespace: agentNamespace,
         nodeSelector: "${el.cicd.JENKINS_AGENT_NODE_SELECETOR}",
+        serviceAccount: "${serviceAccountName}",
         showRawYaml: true,
         volumes: volumeDefs,
+        containers: [
+            name: 'jnlp',
+            alwaysPullImage: true,
+            image: "${el.cicd.JENKINS_OCI_REGISTRY}/${el.cicd.JENKINS_AGENT_IMAGE_PREFIX}-${jenkinsAgent}"
+            resourceRequestCpu: "${el.cicd.JENKINS_AGENT_CPU_REQUEST}",
+            resourceRequestMemory: "${el.cicd.JENKINS_AGENT_MEMORY_REQUEST}",
+            resourceLimitMemory: "${el.cicd.JENKINS_AGENT_MEMORY_LIMIT}"
+        ]
         yaml: """
           spec:
-            imagePullSecrets:
-            - 'elcicd-jenkins-registry-credentials'
-            serviceAccount: "${serviceAccountName}"
-            alwaysPullImage: true
-            resources:
-              requests:
-                memory: ${el.cicd.JENKINS_AGENT_MEMORY_REQUEST}
-                cpu: ${el.cicd.JENKINS_AGENT_CPU_REQUEST}
-              limits:
-                memory: ${el.cicd.JENKINS_AGENT_MEMORY_LIMIT}
             containers:
-            - name: 'jnlp'
-              image: "${el.cicd.JENKINS_OCI_REGISTRY}/${el.cicd.JENKINS_AGENT_IMAGE_PREFIX}-${jenkinsAgent}:latest"
-              ${elCicdMetaInfoConfigMapRef}
-            securityContext:
-              fsGroup: ${fsGroup}
+            - name: 'jnlp',
+              envFrom:
+                configMapRef:
+                    name: "${el.cicd.EL_CICD_META_INFO_NAME}"
+                    prefix: "elcicd_"
         """,
+        yamlMergeStrategy: merge
     ]) {
         node(jenkinsAgent) {
             try {
