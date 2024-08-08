@@ -144,8 +144,8 @@ def initProjectEnvNamespaceData(def projectInfo) {
 
     projectInfo.hotfixEnv = el.cicd.hotfixEnv
 
-    projectInfo.testEnvs = (el.cicd.testEnvs && projectInfo.enabledTestEnvs) ?
-        el.cicd.testEnvs.findAll { projectInfo.enabledTestEnvs.contains(it) } : []
+    projectInfo.testEnvs = (el.cicd.TEST_ENVS && projectInfo.enabledTestEnvs) ?
+        el.cicd.TEST_ENVS.findAll { projectInfo.enabledTestEnvs.contains(it) } : []
 
     projectInfo.preProdEnv = el.cicd.preProdEnv
     projectInfo.prodEnv = el.cicd.prodEnv
@@ -243,9 +243,6 @@ def validateProjectPvs(def projectInfo) {
     projectInfo.staticPvs.each { pv ->
         assert pv.envs : "missing persistent volume environments"
         pv.envs.each { env ->
-            echo "env: ${env}"
-            echo "projectInfo.NON_PROD_ENVS: ${projectInfo.NON_PROD_ENVS}"
-            echo "projectInfo.PROD_ENV: ${projectInfo.PROD_ENV}"
             assert projectInfo.NON_PROD_ENVS.contains(env) || env == projectInfo.PROD_ENV
         }
 
