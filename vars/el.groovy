@@ -100,18 +100,15 @@ def node(Map args, Closure body) {
               volumeMounts:
               - mountPath: /home/jenkins/agent
                 name: agent-home-volume
-              - mountPath: /home/jenkins/.local/share/containers/
-                name: container-cache
               - mountPath: ${el.cicd.BUILDER_SECRETS_DIR ? el.cicd.BUILDER_SECRETS_DIR : "/mnt"}
                 name: build-secrets
             volumes:
             - name: agent-home-volume
               emptyDir: {}
-            - name: container-cache
-              emptyDir: {}
-            - name: build-secrets
-              optional: true
-              secretName: ${el.cicd.EL_CICD_BUILD_SECRETS_NAME}
+            - secret:
+                name: build-secrets
+                optional: true
+                secretName: ${el.cicd.EL_CICD_BUILD_SECRETS_NAME}
         """
     ]) {
         node(jenkinsAgent) {
