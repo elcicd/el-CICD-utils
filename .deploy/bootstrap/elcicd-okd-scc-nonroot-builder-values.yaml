@@ -33,7 +33,7 @@ elCicdTemplates-scc:
     seLinuxContext:
       type: MustRunAs
     seccompProfiles:
-    - runtime/default
+    - "localhost/profiles/unshare.json"
     supplementalGroups:
       type: RunAsAny
     volumes:
