@@ -105,9 +105,9 @@ def node(Map args, Closure body) {
             containers:
             - name: 'jnlp',
               envFrom:
-                configMapRef:
-                    name: "${el.cicd.EL_CICD_META_INFO_NAME}"
-                    prefix: "elcicd_"
+              - configMapRef:
+                  name: "${el.cicd.EL_CICD_META_INFO_NAME}"
+                  prefix: "elcicd_"
         """,
         yamlMergeStrategy: "merge",
     ]) {
