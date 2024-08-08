@@ -191,6 +191,7 @@ def getProjectCommonHelmValues(def projectInfo) {
     projectInfo.elCicdProfiles = projectInfo.deploymentVariant ?
         [projectInfo.deployToEnv, projectInfo.deploymentVariant, "${projectInfo.deployToEnv}-${projectInfo.deploymentVariant}"] :
         [projectInfo.deployToEnv]
+    projectInfo.elCicdProfiles = projectInfo.elCicdProfiles.collect { it.toUpperCase() }
 
     def elCicdDefs = [
         EL_CICD_PROFILES: projectInfo.elCicdProfiles.join(','),
