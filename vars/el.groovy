@@ -83,14 +83,12 @@ def node(Map args, Closure body) {
         elCicdMetaInfoConfigMapRef = ''
     }
 
-    echo "volumes: ${volumeDefs}"
-
     podTemplate([
         label: "${jenkinsAgent}",
         cloud: 'openshift',
         idleMinutes: "${args.isTest ? '0' : el.cicd.JENKINS_AGENT_MEMORY_IDLE_MINUTES}",
         namespace: agentNamespace,
-        nodeSelector: "${el.cicd.JENKINS_AGENT_NODE_SELECTOR}",
+        nodeSelector: "${el.cicd.JENKINS_AGENT_NODE_SELECETOR}",
         showRawYaml: true,
         volumes: volumeDefs,
         yaml: """
@@ -109,7 +107,9 @@ def node(Map args, Closure body) {
             - name: 'jnlp'
               image: "${el.cicd.JENKINS_OCI_REGISTRY}/${el.cicd.JENKINS_AGENT_IMAGE_PREFIX}-${jenkinsAgent}:latest"
               ${elCicdMetaInfoConfigMapRef}
-        """
+            securityContext:
+              fsGroup: ${fsGroup}
+        """,
     ]) {
         node(jenkinsAgent) {
             try {
