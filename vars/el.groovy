@@ -105,10 +105,10 @@ def node(Map args, Closure body) {
             volumes:
             - name: agent-home-volume
               emptyDir: {}
-            - secret:
-                name: build-secrets
-                optional: true
+            - name: build-secrets
+              secret:
                 secretName: ${el.cicd.EL_CICD_BUILD_SECRETS_NAME}
+                optional: true
         """
     ]) {
         node(jenkinsAgent) {
