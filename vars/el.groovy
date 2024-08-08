@@ -95,10 +95,10 @@ def node(Map args, Closure body) {
         containers: [
             name: 'jnlp',
             alwaysPullImage: true,
-            image: "${el.cicd.JENKINS_OCI_REGISTRY}/${el.cicd.JENKINS_AGENT_IMAGE_PREFIX}-${jenkinsAgent}"
+            image: "${el.cicd.JENKINS_OCI_REGISTRY}/${el.cicd.JENKINS_AGENT_IMAGE_PREFIX}-${jenkinsAgent}",
             resourceRequestCpu: "${el.cicd.JENKINS_AGENT_CPU_REQUEST}",
             resourceRequestMemory: "${el.cicd.JENKINS_AGENT_MEMORY_REQUEST}",
-            resourceLimitMemory: "${el.cicd.JENKINS_AGENT_MEMORY_LIMIT}"
+            resourceLimitMemory: "${el.cicd.JENKINS_AGENT_MEMORY_LIMIT}",
         ]
         yaml: """
           spec:
@@ -109,7 +109,7 @@ def node(Map args, Closure body) {
                     name: "${el.cicd.EL_CICD_META_INFO_NAME}"
                     prefix: "elcicd_"
         """,
-        yamlMergeStrategy: merge
+        yamlMergeStrategy: merge,
     ]) {
         node(jenkinsAgent) {
             try {
