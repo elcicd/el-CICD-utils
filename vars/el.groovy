@@ -104,8 +104,7 @@ def node(Map args, Closure body) {
                 name: build-secrets
             volumes:
             - name: agent-home-volume
-              emptyDir:
-                sizeLimit: 500Mi
+              emptyDir: {}
             - name: build-secrets
               optional: true
               secretName: ${el.cicd.EL_CICD_BUILD_SECRETS_NAME}
