@@ -71,6 +71,8 @@ def node(Map args, Closure body) {
         serviceAccountName = "${args.projectId}-${el.cicd.TEST_SERVICE_ACCOUNT_SUFFIX}"
     }
 
+    def podSpec = libraryResource('agentPodSpec.yaml')
+
     podTemplate([
         label: "${jenkinsAgent}",
         cloud: 'openshift',
@@ -78,7 +80,7 @@ def node(Map args, Closure body) {
         namespace: agentNamespace,
         nodeSelector: "${el.cicd.JENKINS_AGENT_NODE_SELECTOR}",
         showRawYaml: true,
-        yaml: libraryResource('agentPodSpec.yaml'),
+        yaml: podSpec
     ]) {
         node(jenkinsAgent) {
             try {

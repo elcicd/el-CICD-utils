@@ -19,7 +19,7 @@ spec:
     volumeMounts:
     - mountPath: /home/jenkins/agent
       name: agent-home-volume
-    - mountPath: ${el.cicd.BUILDER_SECRETS_DIR ? el.cicd.BUILDER_SECRETS_DIR : "/mnt"}
+    - mountPath: "${el.cicd.BUILDER_SECRETS_DIR ? el.cicd.BUILDER_SECRETS_DIR : '/mnt'}"
       name: build-secrets
   volumes:
   - name: agent-home-volume
