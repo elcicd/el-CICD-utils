@@ -102,7 +102,7 @@ def getMergedValuesScript(def projectInfo, def component, def componentConfigFil
         helm template \${VALUES_FILES/ / -f } \
             -f ${el.cicd.CONFIG_CHART_DEPLOY_DIR}/default-component-values.yaml \
             -f ${elCicdOverlayDir}/${componentConfigFile} \
-                --set outputValuesYaml=true \
+                --set renderPreprocessedValues=true \
                 render-values-yaml ${el.cicd.EL_CICD_HELM_OCI_REGISTRY}/elcicd-chart | sed -E '/^#|^---/d' > ${tmpValuesFile}
 
         ${loggingUtils.shellEchoBanner("Merged ${component.name} Helm values.yaml")}
