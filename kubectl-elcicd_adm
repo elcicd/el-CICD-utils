@@ -34,7 +34,10 @@ __main() {
 
     _create_and_source_meta_info_files
 
-    EL_CICD_JENKINS_SECRETS_CHART=$(helm list -q --filter elcicd-jenkins-secrets -n ${EL_CICD_MASTER_NAMESPACE} 2>/dev/null)
+    if [[ $(oc cluster-info > /dev/null 2>&1) ]]
+    then
+        EL_CICD_JENKINS_SECRETS_CHART=$(helm list -q --filter elcicd-jenkins-secrets -n ${EL_CICD_MASTER_NAMESPACE} 2>/dev/null)
+    fi
 
     sleep 2
 
